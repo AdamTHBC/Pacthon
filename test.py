@@ -1,15 +1,16 @@
-from curses import initscr,endwin,wrapper,A_REVERSE,A_BOLD
+from curses import *
 
 def main(stdscr):
     stdscr = initscr()
 
-    max_y,max_x = stdscr.getmaxyx()
+    start_color()
+    use_default_colors()
+    init_pair(1,COLOR_RED,-1)
 
-    stdscr.attron(A_REVERSE)
-    stdscr.addstr(int(max_y/2)-1,int(max_x/2),'Hello!',A_BOLD)
-    stdscr.addstr(int(max_y/2),int(max_x/2),'Hello!',)
-    stdscr.attroff(A_REVERSE)
-    stdscr.addstr(int(max_y/2)+1,int(max_x/2),'Hello!')
+    
+    stdscr.addstr('Hello!\n',color_pair(1) + A_BOLD)
+    stdscr.addstr('Hello!\n',color_pair(1))
+
 
     stdscr.getch()
 
