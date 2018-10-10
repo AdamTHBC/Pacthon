@@ -4,15 +4,17 @@ def main(stdscr):
     stdscr = initscr()
 
     start_color()
-    use_default_colors()
-    init_pair(1,COLOR_RED,-1)
-
+    echo()
+    #noecho()
+    curs_set(False)
+    stdscr.keypad(True)
     
-    stdscr.addstr('Hello!\n',color_pair(1) + A_BOLD)
-    stdscr.addstr('Hello!\n',color_pair(1))
-
-
-    stdscr.getch()
+    running = True
+    while (running):
+        key = stdscr.getch()
+        if (key == 27):
+            running = False
+            break
 
 
     endwin()
