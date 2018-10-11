@@ -1,17 +1,22 @@
-from curses import *
+from unicurses import *
 
-def main(stdscr):
+def main():
     stdscr = initscr()
 
     start_color()
-    echo()
-    #noecho()
+    noecho()
     curs_set(False)
-    stdscr.keypad(True)
+    keypad(stdscr,True)
+
+    window = newwin(10,25,3,10)
+    waddstr(window,"Hello!")
     
+    window2 = newwin(2,25,3,80)
+    waddstr(window2,"Hello again!")
+
     running = True
     while (running):
-        key = stdscr.getch()
+        key = wgetch(window2)
         if (key == 27):
             running = False
             break
@@ -19,4 +24,5 @@ def main(stdscr):
 
     endwin()
 
-wrapper(main)
+if (__name__ == "__main__"):
+    main()
