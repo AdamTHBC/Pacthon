@@ -30,6 +30,7 @@ while True:
         m.collision(h, o.l)
         time.sleep(refresh_rate)
         licznik += 1
+        stdscr.getch()
     if key == 'q':
         break
 

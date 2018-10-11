@@ -7,12 +7,13 @@ class Map:
         "nothing"
 
     def draw(self, hero, objects, stdscr):
+        stdscr.erase()
         y = 0
         stdscr.addstr(0,0,"/--------------------\\")
-        while (y < max_y):
+        while (y <= max_y):
             x = 0
             stdscr.addch(y+1,x,"|")
-            while (x < max_x):
+            while (x <= max_x):
                 if (x == hero.x and y == hero.y):
                     stdscr.addch(y,x,"H")
                 else:
@@ -23,8 +24,8 @@ class Map:
             stdscr.addch(y+1,x,"|")
             y += 1
 
-        stdscr.addstr(y+1,0,"\\--------------------/")
-        stdscr.getch()
+        stdscr.addstr(y,0,"\\--------------------/")
+        stdscr.refresh()
 
     def collision(self, hero, objects):
         for i in objects:
