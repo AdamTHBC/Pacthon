@@ -8,15 +8,16 @@ def main():
     curs_set(False)
     keypad(stdscr,True)
 
-    window = newwin(10,25,3,10)
+    window = newwin(10,25,3,3)
+    box(window)
+    
+    wmove(window,1,1)
     waddstr(window,"Hello!")
     
-    window2 = newwin(2,25,3,80)
-    waddstr(window2,"Hello again!")
 
     running = True
     while (running):
-        key = wgetch(window2)
+        key = wgetch(window)
         if (key == 27):
             running = False
             break
