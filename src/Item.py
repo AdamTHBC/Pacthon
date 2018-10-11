@@ -17,6 +17,10 @@ class Objects:
         self.l = []
 
     def spawn(self):
+        if (self.l.__len__() > (max_x * max_y - 1) / 2):
+            print("Limit obiektow! Nic nie stworzono")
+            return
+
         new_x = random.randint(0, max_x - 1)
         new_y = random.randint(0, max_y - 1)
         for i in self.l:
