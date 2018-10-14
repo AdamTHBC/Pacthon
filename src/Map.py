@@ -8,6 +8,7 @@ class Map:
 
     def draw(self, hero, objects):
         y = 0
+        print("")
         print("/--------------------\\")
         while (y < max_y):
             x = 0
@@ -29,10 +30,11 @@ class Map:
             y = y + 1
 
         print("\\--------------------/")
+        print(">", end='', flush=True)
 
     def collision(self, hero, objects):
         for i in objects:
             if (hero.x == i.x and hero.y == i.y):
-                print("munch!")
+                print("munch!", end='', flush=True)
                 objects.remove(i)
                 hero.eat()
