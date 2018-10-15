@@ -16,7 +16,6 @@ m.draw(h, o.l)
 
 licznik = 0
 
-print(sys.path)
 while True:
     
     key = getkey()
