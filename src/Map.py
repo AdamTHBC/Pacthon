@@ -6,7 +6,7 @@ class Map:
     def __init__(self):
         "nothing"
 
-    def draw(self, hero, objects):
+    def draw(self, objects):
         y = 0
         print("")
         print("/--------------------\\")
@@ -14,17 +14,21 @@ class Map:
             x = 0
             print("|",end='', flush=True)
             while (x < max_x):
-                if (x == hero.x and y == hero.y):
+                if (x == objects.get('hero').x and y == objects.get('hero').y):
                     print("H", end='', flush=True)
                 else:
-                    flag = True
-                    for i in objects:
+                    spot_free = True
+                    for i in objects.get('items'):
                         if (x == i.x and y == i.y):
                             print("O", end='', flush=True)
-                            flag = False
-                    if (flag):
+                            spot_free = False
+                    if (spot_free):
+                        for i in objects.get('monsters'):
+                            if (x == i.x and y == i.y):
+                                print("M", end='', flush=True)
+                                spot_free = False
+                    if (spot_free):
                         print(" ", end='', flush=True)
-                    # print("(", x, ", ", y, ") ", end='', flush=True)
                 x = x + 1
             print("|")
             y = y + 1
@@ -32,9 +36,14 @@ class Map:
         print("\\--------------------/")
         print(">", end='', flush=True)
 
-    def collision(self, hero, objects):
-        for i in objects:
-            if (hero.x == i.x and hero.y == i.y):
+    def collision(self, objects):
+        for i in objects.get('monsters'):
+            if (objects.get('hero').x == i.x and objects.get('hero').y == i.y):
+                print("Ouch! ", end='', flush=True)
+                return True
+        for i in objects.get('items'):
+            if (objects.get('hero').x == i.x and objects.get('hero').y == i.y):
                 print("munch!", end='', flush=True)
-                objects.remove(i)
-                hero.eat()
+                objects.get('items').remove(i)
+                objects.get('hero').eat()
+                return False

@@ -1,6 +1,5 @@
+from Important import max_x, max_y
 from getkey import keys
-
-from Important import max_x,max_y
 
 
 class Hero:
@@ -34,3 +33,6 @@ class Hero:
 
     def eat(self):
         self.score = self.score + 1
+
+    def hello(self):
+        print("Hero: ", self.x, " ", self.y)
