@@ -28,7 +28,21 @@ class Objects:
         self.lists = {'items': [], 'monsters': [], 'hero': Hero()}
         self.lists.get('hero')
 
+    def check_limit(self):
+        object_count = 1 + len(self.lists.get('items')) + len(self.lists.get('monsters'))
+        object_limit = max_x * max_y
+        if (object_count >= object_limit):
+            print("Can't create more objects!")
+            return True
+        return False
+
     def spawn(self, object_type):
+        """Generator of new objects of any available type"""
+
+        "verify if object limit not reached"
+        if (self.check_limit()):
+            return
+
         "roll new coords"
         new_x = random.randint(0, max_x - 1)
         new_y = random.randint(0, max_y - 1)
