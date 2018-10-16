@@ -6,6 +6,23 @@ class Map:
     def __init__(self):
         "nothing"
 
+    def draw_spot(self, x, y, objects):
+        """Decide what should be drawn on a given spot"""
+
+        "verify singular objects"
+        for i in objects.non_lists:
+            j = objects.lists.get(i)
+            if (x == j.x and y == j.y):
+                return j.mark
+
+        "verify lists"
+        for i in objects.list_keys:
+            for j in objects.lists.get(i):
+                if (x == j.x and y == j.y):
+                    return j.mark
+
+        return ' '
+
     def draw(self, objects):
         y = 0
         print("")
@@ -14,21 +31,7 @@ class Map:
             x = 0
             print("|",end='', flush=True)
             while (x < max_x):
-                if (x == objects.get('hero').x and y == objects.get('hero').y):
-                    print("H", end='', flush=True)
-                else:
-                    spot_free = True
-                    for i in objects.get('items'):
-                        if (x == i.x and y == i.y):
-                            print("O", end='', flush=True)
-                            spot_free = False
-                    if (spot_free):
-                        for i in objects.get('monsters'):
-                            if (x == i.x and y == i.y):
-                                print("M", end='', flush=True)
-                                spot_free = False
-                    if (spot_free):
-                        print(" ", end='', flush=True)
+                print(self.draw_spot(x, y, objects), end='', flush=True)
                 x = x + 1
             print("|")
             y = y + 1

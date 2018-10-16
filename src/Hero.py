@@ -7,6 +7,8 @@ class Hero:
         self.x = max_x / 2
         self.y = max_y / 2
         self.score = 0
+        self.mark = 'H'
+
 
     def ruch(self, kierunek):
         if (kierunek == 1 and self.y + 1 < max_y):
@@ -35,4 +37,4 @@ class Hero:
         self.score = self.score + 1
 
     def hello(self):
-        print("Hero: ", self.x, " ", self.y)
+        print("Hero ", self.x, " ", self.y)

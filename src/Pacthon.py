@@ -12,7 +12,7 @@ for x in range(10):
     o.spawn('monster')
 
 m = Map()
-m.draw(o.lists)
+m.draw(o)
 
 licznik = 0
 
@@ -21,7 +21,7 @@ while True:
     key = getkey()
     if key is not None:
         h.ster(key)
-        m.draw(o.lists)
+        m.draw(o)
         eaten = m.collision(o.lists)
         time.sleep(refresh_rate)
         licznik += 1
