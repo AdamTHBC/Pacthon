@@ -29,4 +29,4 @@ while True:
     if (key == 'q' or eaten):
         break
 
-print("Zjadlem ", h.score, " rzeczy.")
+print("Mam", h.score, "punktow.")

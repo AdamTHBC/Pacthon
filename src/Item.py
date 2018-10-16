@@ -7,6 +7,6 @@ class Item:
     def hello(self):
         print("Item ", self.x, " ", self.y)
 
-    def collision_deadly(self):
+    def collision_result(self):
         print("munch!", end='', flush=True)
-        return False
+        return 1

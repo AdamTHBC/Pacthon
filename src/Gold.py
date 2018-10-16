@@ -7,6 +7,6 @@ class Gold:
     def hello(self):
         print("Gold ", self.x, " ", self.y)
 
-    def collision_deadly(self):
+    def collision_result(self):
         print("yum!", end='', flush=True)
-        return False
+        return 3

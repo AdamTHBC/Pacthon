@@ -43,8 +43,9 @@ class Map:
         for i in objects.list_keys:
             for j in objects.lists.get(i):
                 if (objects.lists.get('hero').x == j.x and objects.lists.get('hero').y == j.y):
-                    if (j.collision_deadly()):
+                    result = j.collision_result()
+                    if (result == -1):
                         return True
                     objects.lists.get(i).remove(j)
-                    objects.lists.get('hero').eat()
+                    objects.lists.get('hero').eat(result)
         return False

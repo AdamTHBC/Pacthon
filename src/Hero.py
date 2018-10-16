@@ -32,9 +32,8 @@ class Hero:
         else:
             "nothing"
 
-
-    def eat(self):
-        self.score = self.score + 1
+    def eat(self, x):
+        self.score = self.score + x
 
     def hello(self):
         print("Hero ", self.x, " ", self.y)
