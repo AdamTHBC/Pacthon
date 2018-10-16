@@ -9,6 +9,7 @@ o = Objects()
 h = o.lists.get('hero')
 for x in range(10):
     o.spawn('item')
+    o.spawn('gold')
     o.spawn('monster')
 
 m = Map()
@@ -29,4 +30,3 @@ while True:
         break
 
 print("Zjadlem ", h.score, " rzeczy.")
-o.hello()

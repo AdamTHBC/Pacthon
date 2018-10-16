@@ -1,5 +1,6 @@
 import random
 
+from Gold import Gold
 from Hero import Hero
 from Important import max_x, max_y
 from Item import Item
@@ -9,9 +10,9 @@ from Monster import Monster
 class Objects:
     def __init__(self):
         self.l = []
-        self.lists = {'items': [], 'monsters': [], 'hero': Hero()}
+        self.lists = {'items': [], 'monsters': [], 'gold': [], 'hero': Hero()}
         self.lists.get('hero')
-        self.list_keys = ['items', 'monsters']
+        self.list_keys = ['items', 'monsters', 'gold']
         self.non_lists = ['hero']
 
     def check_limit(self):
@@ -65,6 +66,8 @@ class Objects:
             self.lists.get('monsters').append(Monster(new_x, new_y))
         elif (object_type == 'item'):
             self.lists.get('items').append(Item(new_x, new_y))
+        elif (object_type == 'gold'):
+            self.lists.get('gold').append(Gold(new_x, new_y))
 
     def hello(self):
         for i in self.list_keys:
