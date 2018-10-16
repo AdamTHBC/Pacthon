@@ -1,8 +1,8 @@
-class Item:
+class Monster:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.mark = 'O'
+        self.mark = 'M'
 
     def hello(self):
-        print("Item ", self.x, " ", self.y)
+        print("Monster ", self.x, " ", self.y)

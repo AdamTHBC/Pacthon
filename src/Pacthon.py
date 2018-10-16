@@ -1,8 +1,8 @@
 import time
 
 from Important import refresh_rate
-from Item import Objects
 from Map import Map
+from Objects import Objects
 from getkey import getkey
 
 o = Objects()
