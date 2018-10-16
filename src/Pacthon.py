@@ -22,10 +22,11 @@ while True:
     if key is not None:
         h.ster(key)
         m.draw(o)
-        eaten = m.collision(o.lists)
+        eaten = m.collision(o)
         time.sleep(refresh_rate)
         licznik += 1
     if (key == 'q' or eaten):
         break
 
 print("Zjadlem ", h.score, " rzeczy.")
+o.hello()

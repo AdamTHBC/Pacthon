@@ -40,13 +40,11 @@ class Map:
         print(">", end='', flush=True)
 
     def collision(self, objects):
-        for i in objects.get('monsters'):
-            if (objects.get('hero').x == i.x and objects.get('hero').y == i.y):
-                print("Ouch! ", end='', flush=True)
-                return True
-        for i in objects.get('items'):
-            if (objects.get('hero').x == i.x and objects.get('hero').y == i.y):
-                print("munch!", end='', flush=True)
-                objects.get('items').remove(i)
-                objects.get('hero').eat()
-                return False
+        for i in objects.list_keys:
+            for j in objects.lists.get(i):
+                if (objects.lists.get('hero').x == j.x and objects.lists.get('hero').y == j.y):
+                    if (j.collision_deadly()):
+                        return True
+                    objects.lists.get(i).remove(j)
+                    objects.lists.get('hero').eat()
+        return False

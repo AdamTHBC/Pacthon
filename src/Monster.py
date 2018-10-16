@@ -6,3 +6,7 @@ class Monster:
 
     def hello(self):
         print("Monster ", self.x, " ", self.y)
+
+    def collision_deadly(self):
+        print("Ouch! ", end='', flush=True)
+        return True
