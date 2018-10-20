@@ -1,5 +1,6 @@
 import random
 
+from unicurses import addstr
 from Important import max_x,max_y
 
 
@@ -8,8 +9,8 @@ class Item:
         self.x = x
         self.y = y
 
-    def hello(self,stdscr):
-        stdscr.addstr(max_y+1,0,"Item " + str(self.x) + " " + str(self.y) + "\n")
+    def hello(self,stdscr,i):
+        stdscr.addstr(i,max_x+5,"Item " + str(self.x) + " " + str(self.y) + "\n")
 
 
 class Objects:
@@ -26,5 +27,7 @@ class Objects:
         self.l.append(Item(new_x, new_y))
 
     def hello(self,stdscr):
+        y = 0
         for i in self.l:
-            i.hello(stdscr)
+            i.hello(stdscr,y)
+            y += 1

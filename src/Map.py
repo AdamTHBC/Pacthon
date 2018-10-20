@@ -1,5 +1,5 @@
 from Important import max_x,max_y
-from curses import *
+from unicurses import *
 
 
 class Map:
@@ -27,10 +27,10 @@ class Map:
         stdscr.addstr(y,0,"\\--------------------/")
         stdscr.refresh()
 
-    def collision(self, hero, objects):
+    def collision(self, hero, objects,stdscr):
         for i in objects:
             if (hero.x == i.x and hero.y == i.y):
-                #print("munch!")
+                stdscr.addstr(max_y+2,0,"Munch")
                 objects.remove(i)
                 hero.eat()
 
