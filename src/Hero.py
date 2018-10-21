@@ -1,13 +1,17 @@
 from Important import max_x, max_y
+from Map_Object import MapObject
 from getkey import keys
 
 
-class Hero:
+class Hero(MapObject):
     def __init__(self):
-        self.x = max_x / 2
-        self.y = max_y / 2
-        self.score = 0
+        self.x = int(max_x / 2)
+        self.y = int(max_y / 2)
+        self.gold = 0
+        self.experience = 0
+        self.hp = 3
         self.mark = 'H'
+        self.type_name = 'Hero'
 
 
     def ruch(self, kierunek):
@@ -33,7 +37,13 @@ class Hero:
             "nothing"
 
     def eat(self, x):
-        self.score = self.score + x
+        self.gold += x
 
-    def hello(self):
-        print("Hero ", self.x, " ", self.y)
+    def collision_result(self):
+        """not really possible"""
+
+    def defeat_result(self):
+        """game over"""
+
+    def response(self):
+        print("You can't talk to yourself")

@@ -69,6 +69,14 @@ class Objects:
         elif (object_type == 'gold'):
             self.lists.get('gold').append(Gold(new_x, new_y))
 
+    def count(self):
+        result = 0
+        for i in self.list_keys:
+            for j in self.lists.get(i):
+                result += 1
+        return result
+
+
     def hello(self):
         for i in self.list_keys:
             for j in self.lists.get(i):
