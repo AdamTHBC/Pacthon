@@ -1,5 +1,3 @@
-from getkey import keys
-
 from Important import max_x,max_y
 
 
@@ -12,7 +10,7 @@ class Hero:
     def ruch(self, kierunek):
         if (kierunek == 1 and self.y < max_y):
             self.y += 1
-        if (kierunek == 2 and self.x  < max_x):
+        if (kierunek == 2 and self.x < max_x):
             self.x += 1
         if (kierunek == 3 and self.y > 1):
             self.y -= 1
@@ -20,13 +18,13 @@ class Hero:
             self.x -= 1
 
     def ster(self,key):
-        if key == keys.UP:
+        if key == 65:   #UP
             self.ruch(3)
-        if key == keys.DOWN:
+        if key == 66:   #DOWN
             self.ruch(1)
-        if key == keys.RIGHT:
+        if key == 67:    #RIGHT
             self.ruch(2)
-        if key == keys.LEFT:
+        if key == 68:     #LEFT
             self.ruch(4)
         else:
             "nothing"

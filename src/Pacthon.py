@@ -1,7 +1,6 @@
 import time
 
-from getkey import getkey
-from unicurses import initscr,addstr
+from unicurses import initscr,addstr,getch,refresh
 
 from Important import refresh_rate,max_x,max_y
 from Hero import Hero
@@ -21,14 +20,13 @@ m = Map()
 licznik = 0
 while True:
     
-    key = getkey()
-    if key is not None:
-        h.ster(key)
-        m.draw(h,o.l,stdscr)
-        m.collision(h, o.l,stdscr)
-        time.sleep(refresh_rate)
-        licznik += 1
-    if key == 'q':
+    key = getch()
+    h.ster(key)
+    m.draw(h,o.l,stdscr)
+    m.collision(h, o.l,stdscr)
+    #time.sleep(refresh_rate)
+    licznik += 1
+    if key == ord('q'):
         break
 
 

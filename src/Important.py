@@ -2,4 +2,4 @@
 
 max_x = 20
 max_y = 10
-refresh_rate = 0.1
+refresh_rate = 0.25
