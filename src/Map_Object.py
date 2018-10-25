@@ -1,4 +1,5 @@
 from Event_Result import EventResult
+from Important import max_x
 
 
 class MapObject:
@@ -10,9 +11,9 @@ class MapObject:
         self.mark = '?'
         self.type_name = 'any object'
 
-    def hello(self):
+    def hello(self, stdscr, y):
         """Say hi, help debug"""
-        print(self.type_name, self.x, self.y)
+        stdscr.addstr(y, max_x + 5, str(self.type_name) + ' ' + str(self.x) + ' ' + str(self.y))
 
     def collision_result(self):
         """What a colliding hero will get"""

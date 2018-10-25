@@ -1,9 +1,8 @@
-import time
+from unicurses import *
 
-from Important import refresh_rate, ArrowKeyList
+from Hero import Hero
 from Map import Map
 from Objects import Objects
-from getkey import getkey
 
 o = Objects()
 h = o.lists.get('hero')
@@ -12,49 +11,56 @@ for x in range(10):
     o.spawn('gold')
     o.spawn('monster')
 
-print("""
-arrows - move
-wsad - look
-ijkl - attack
-q - quit
-any button - Start
+move_keys = [65, 66, 67, 68]
+look_keys = "wasd"
+attack_keys = "ijkl"
+
+stdscr = initscr()
+noecho()
+curs_set(False)
+stdscr.addstr(0, 0, """"
+arrows - move\n
+wsad - look\n
+ijkl - attack\n
+q - quit\n
+any button - Start\n
 """)
-getkey()
+
 
 m = Map()
-m.draw(o)
+m.draw(stdscr, o)
 
 licznik = 0
 
 while True:
-    
-    key = getkey()
-    if key in ArrowKeyList:
+    """bug do naprawienia - nie pokazuje wiadomosci z obiektow, printuja sie poza loopem rysowania mapy"""
+    key = getch()
+    stdscr.erase()
+    if key in [65, 66, 67, 68]:
         h.ster(key)
-        result = m.collision(o)
+        result = m.collision(stdscr, o)
         if (result != 0):
             h.hp -= result.damage
             h.experience += result.experience
             h.gold += result.gold
-        m.draw(o)
-        time.sleep(refresh_rate)
-        licznik += 1
-    elif key in "wsad":
-        m.look_at(o, key)
-        time.sleep(refresh_rate)
-        licznik += 1
-    elif key in "ijkl":
-        result = m.attack(o, key)
+    elif chr(key) in look_keys:
+        m.look_at(stdscr, o, chr(key))
+    elif chr(key) in attack_keys:
+        result = m.attack(stdscr, o, chr(key))
         if (result != 0):
             h.hp -= result.damage
             h.experience += result.experience
             h.gold += result.gold
-        m.draw(o)
-        time.sleep(refresh_rate)
-        licznik += 1
+
     objects_left = o.count()
-    if (key == 'q' or h.hp <= 0 or objects_left == 0):
-        m.draw(o)
-        print("final score:", 5 * h.experience + 4 * h.gold + 10 * h.hp - licznik)
-        print("THE END")
+    if (chr(key) == 'q' or h.hp <= 0 or objects_left == 0):
+        stdscr.addstr(0, 1, "final score:" + str(5 * h.experience + 4 * h.gold + 10 * h.hp - licznik))
+        stdscr.addstr(1, 5, "THE END")
         break
+
+    #    stdscr.addstr(max_y+5,0, "Aby zakonczyc GRE nacisnij q...")
+    licznik += 1
+    m.draw(stdscr, o)
+
+# o.hello(stdscr)
+stdscr.getch()

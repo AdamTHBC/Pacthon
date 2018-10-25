@@ -52,8 +52,8 @@ class Objects:
             return
 
         "roll new coords"
-        new_x = random.randint(0, max_x - 1)
-        new_y = random.randint(0, max_y - 1)
+        new_x = random.randint(1, max_x)
+        new_y = random.randint(1, max_y)
 
         "verify if coords are valid (no object there)"
         "repeat spawn if cords were bad"
@@ -76,10 +76,12 @@ class Objects:
                 result += 1
         return result
 
-
-    def hello(self):
+    def hello(self, stdscr):
+        y = 5
         for i in self.list_keys:
             for j in self.lists.get(i):
-                j.hello()
+                j.hello(stdscr, y)
+                y += 1
         for i in self.non_lists:
-            self.lists.get(i).hello()
+            self.lists.get(i).hello(stdscr, y)
+            y += 1
