@@ -1,6 +1,5 @@
 from Important import max_x, max_y
 from Map_Object import MapObject
-from getkey import keys
 
 
 class Hero(MapObject):
@@ -15,23 +14,23 @@ class Hero(MapObject):
 
 
     def ruch(self, kierunek):
-        if (kierunek == 1 and self.y + 1 < max_y):
-            self.y = self.y + 1
-        if (kierunek == 2 and self.x + 1 < max_x):
-            self.x = self.x + 1
-        if (kierunek == 3 and self.y > 0):
-            self.y = self.y - 1
-        if (kierunek == 4 and self.x > 0):
-            self.x = self.x - 1
+        if (kierunek == 1 and self.y < max_y):
+            self.y += 1
+        if (kierunek == 2 and self.x < max_x):
+            self.x += 1
+        if (kierunek == 3 and self.y > 1):
+            self.y -= 1
+        if (kierunek == 4 and self.x > 1):
+            self.x -= 1
 
-    def ster(self,key):
-        if key == keys.UP:
+    def ster(self, key):
+        if key == 65:  # UP
             self.ruch(3)
-        if key == keys.DOWN:
+        if key == 66:  # DOWN
             self.ruch(1)
-        if key == keys.RIGHT:
+        if key == 67:  #RIGHT
             self.ruch(2)
-        if key == keys.LEFT:
+        if key == 68:  #LEFT
             self.ruch(4)
         else:
             "nothing"
@@ -45,5 +44,9 @@ class Hero(MapObject):
     def defeat_result(self):
         """game over"""
 
-    def response(self):
-        print("You can't talk to yourself")
+    def response(self, stdscr):
+        stdscr.addstr(max_y + 2, 0, "You can't talk to yourself")
+
+    def hello(self, stdscr, y):
+        """Say hi, help debug"""
+        stdscr.addstr(y, max_x + 5, str(self.type_name) + " " + str(self.x) + " " + str(self.y))

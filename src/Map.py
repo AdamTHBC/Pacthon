@@ -1,5 +1,5 @@
-
 from Important import max_x,max_y
+from unicurses import *
 
 
 class Map:
@@ -23,31 +23,30 @@ class Map:
 
         return ' '
 
-    def draw(self, objects):
-        y = 0
+    def draw(self, stdscr, objects):
         hero = objects.lists.get('hero')
-        print("")
-        print("/--------------------\\")
-        while (y < max_y):
-            x = 0
-            print("|",end='', flush=True)
-            while (x < max_x):
-                print(self.draw_spot(x, y, objects), end='', flush=True)
-                x = x + 1
-            if (y == 1):
-                print("|   HP", hero.hp)
-            elif (y == 2):
-                print("|   XP", hero.experience)
-            elif (y == 3):
-                print("|   G", hero.gold)
-            else:
-                print("|")
-            y = y + 1
+        y = 1
+        stdscr.addstr(0, 0, "/--------------------\\")
+        while (y <= max_y):
+            x = 1
+            stdscr.addch(y, 0, "|")
+            while (x <= max_x):
+                char_to_draw = self.draw_spot(x, y, objects)
+                stdscr.addch(y, x, char_to_draw)
+                x += 1
 
-        print("\\--------------------/")
-        print(">", end='', flush=True)
+            stdscr.addch(y, x, "|")
+            y += 1
 
-    def look_at(self, objects, direction):
+        stdscr.addstr(y, 0, "\\--------------------/")
+
+        stdscr.addstr(1, max_x + 5, "HP " + str(hero.hp))
+        stdscr.addstr(2, max_x + 5, "XP " + str(hero.experience))
+        stdscr.addstr(3, max_x + 5, "G " + str(hero.gold))
+
+        stdscr.refresh()
+
+    def look_at(self, stdscr, objects, direction):
         look_x = objects.lists.get('hero').x
         look_y = objects.lists.get('hero').y
 
@@ -62,9 +61,9 @@ class Map:
         for i in objects.list_keys:
             for j in objects.lists.get(i):
                 if (look_x == j.x and look_y == j.y):
-                    j.response()
+                    j.response(stdscr)
 
-    def attack(self, objects, direction):
+    def attack(self, stdscr, objects, direction):
         attack_x = objects.lists.get('hero').x
         attack_y = objects.lists.get('hero').y
 
@@ -79,18 +78,21 @@ class Map:
         for i in objects.list_keys:
             for j in objects.lists.get(i):
                 if (attack_x == j.x and attack_y == j.y):
-                    result = j.defeat_result()
+                    result = j.defeat_result(stdscr)
                     if (result.remove == True):
                         objects.lists.get(i).remove(j)
                     return result
         return 0
 
-    def collision(self, objects):
+    def collision(self, stdscr, objects):
         for i in objects.list_keys:
             for j in objects.lists.get(i):
                 if (objects.lists.get('hero').x == j.x and objects.lists.get('hero').y == j.y):
-                    result = j.collision_result()
+                    result = j.collision_result(stdscr)
                     if (result.remove == True):
                         objects.lists.get(i).remove(j)
                     return result
         return 0
+
+    def __del__(self):
+        endwin()
