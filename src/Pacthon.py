@@ -1,42 +1,46 @@
-from unicurses import *
-
-from Hero import Hero
 from Map import Map
 from Objects import Objects
+from unicurses import *
+
+
+def show_help():
+    stdscr.addstr(0, 0, """
+    arrows - move
+    wsad - look
+    ijkl - attack
+    q - quit
+    any button - Start
+    """)
 
 o = Objects()
 h = o.lists.get('hero')
-for x in range(10):
-    o.spawn('item')
-    o.spawn('gold')
-    o.spawn('monster')
 
 move_keys = [65, 66, 67, 68]
 look_keys = "wasd"
 attack_keys = "ijkl"
+ignore_keys = [27, 91]
 
 stdscr = initscr()
 noecho()
 curs_set(False)
-stdscr.addstr(0, 0, """"
-arrows - move\n
-wsad - look\n
-ijkl - attack\n
-q - quit\n
-any button - Start\n
-""")
 
+show_help()
 
+while (stdscr.getch() in ignore_keys):
+    stdscr.getch()
 m = Map()
+stdscr.erase()
 m.draw(stdscr, o)
 
 licznik = 0
 
 while True:
-    """bug do naprawienia - nie pokazuje wiadomosci z obiektow, printuja sie poza loopem rysowania mapy"""
-    key = getch()
+    key = stdscr.getch()
+    if (key in ignore_keys):
+        continue
+
     stdscr.erase()
-    if key in [65, 66, 67, 68]:
+    if (key in move_keys):
         h.ster(key)
         result = m.collision(stdscr, o)
         if (result != 0):
@@ -54,13 +58,12 @@ while True:
 
     objects_left = o.count()
     if (chr(key) == 'q' or h.hp <= 0 or objects_left == 0):
+        stdscr.erase()
         stdscr.addstr(0, 1, "final score:" + str(5 * h.experience + 4 * h.gold + 10 * h.hp - licznik))
         stdscr.addstr(1, 5, "THE END")
         break
 
-    #    stdscr.addstr(max_y+5,0, "Aby zakonczyc GRE nacisnij q...")
     licznik += 1
     m.draw(stdscr, o)
 
-# o.hello(stdscr)
 stdscr.getch()

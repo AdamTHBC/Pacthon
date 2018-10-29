@@ -1,4 +1,4 @@
-from Important import max_x,max_y
+from Important import max_x, max_y
 from unicurses import *
 
 
@@ -26,7 +26,14 @@ class Map:
     def draw(self, stdscr, objects):
         hero = objects.lists.get('hero')
         y = 1
-        stdscr.addstr(0, 0, "/--------------------\\")
+
+        stdscr.addch(0, 0, "/")
+        x = 1
+        while (x <= max_x):
+            stdscr.addch(0, x, "-")
+            x += 1
+        stdscr.addch(0, max_x + 1, "\\")
+
         while (y <= max_y):
             x = 1
             stdscr.addch(y, 0, "|")
@@ -38,7 +45,12 @@ class Map:
             stdscr.addch(y, x, "|")
             y += 1
 
-        stdscr.addstr(y, 0, "\\--------------------/")
+        stdscr.addch(max_y + 1, 0, "\\")
+        x = 1
+        while (x <= max_x):
+            stdscr.addch(max_y + 1, x, "-")
+            x += 1
+        stdscr.addch(max_y + 1, max_x + 1, "/")
 
         stdscr.addstr(1, max_x + 5, "HP " + str(hero.hp))
         stdscr.addstr(2, max_x + 5, "XP " + str(hero.experience))

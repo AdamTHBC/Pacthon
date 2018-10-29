@@ -2,7 +2,7 @@ import random
 
 from Gold import Gold
 from Hero import Hero
-from Important import max_x, max_y
+from Important import max_x, max_y, amountItem, amountGold, amountMonster
 from Item import Item
 from Monster import Monster
 
@@ -14,6 +14,12 @@ class Objects:
         self.lists.get('hero')
         self.list_keys = ['items', 'monsters', 'gold']
         self.non_lists = ['hero']
+        for x in range(amountItem):
+            self.spawn('item')
+        for x in range(amountGold):
+            self.spawn('gold')
+        for x in range(amountMonster):
+            self.spawn('monster')
 
     def check_limit(self):
         object_count = len(self.non_lists)
