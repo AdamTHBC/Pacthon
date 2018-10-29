@@ -1,3 +1,4 @@
+from Important import debug
 from Map import Map
 from Objects import Objects
 from unicurses import *
@@ -40,6 +41,11 @@ while True:
         continue
 
     stdscr.erase()
+    if (chr(key) == 'n' and debug == True):
+        o.spawn('item')
+        o.spawn('gold')
+        o.spawn('monster')
+
     if (key in move_keys):
         h.ster(key)
         result = m.collision(stdscr, o)

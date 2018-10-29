@@ -5,3 +5,4 @@ max_y = 10
 amountItem = 10
 amountGold = 10
 amountMonster = 10
+debug = False
