@@ -1,5 +1,6 @@
 import random
 
+from Food import Food
 from Gold import Gold
 from Hero import Hero
 from Important import *
@@ -11,9 +12,9 @@ from Wall import Wall
 class Objects:
     def __init__(self):
         self.l = []
-        self.lists = {'items': [], 'monsters': [], 'gold': [], 'walls': [], 'hero': Hero()}
+        self.lists = {'items': [], 'monsters': [], 'gold': [], 'walls': [], 'food': [], 'hero': Hero()}
         self.lists.get('hero')
-        self.list_keys = ['items', 'monsters', 'gold', 'walls']
+        self.list_keys = ['items', 'monsters', 'gold', 'walls', 'food']
         self.non_lists = ['hero']
         for x in range(amountItem):
             self.spawn('item')
@@ -23,6 +24,8 @@ class Objects:
             self.spawn('monster')
         for x in range(amountWall):
             self.spawn('wall')
+        for x in range(amountFood):
+            self.spawn('food')
 
     def check_limit(self):
         object_count = len(self.non_lists)
@@ -79,6 +82,8 @@ class Objects:
             self.lists.get('gold').append(Gold(new_x, new_y))
         elif (object_type == 'wall'):
             self.lists.get('walls').append(Wall(new_x, new_y))
+        elif (object_type == 'food'):
+            self.lists.get('food').append(Food(new_x, new_y))
 
     def get_object(self, x, y):
         """returns object at given coords or None if empty"""

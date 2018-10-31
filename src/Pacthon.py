@@ -49,10 +49,11 @@ while True:
         o.spawn('gold')
         o.spawn('monster')
         o.spawn('wall')
+        o.spawn('food')
 
     if (key in move_keys):
         if (m.ster(key)):
-            stdscr.addstr(max_y + 3, 0, "A wall!")
+            stdscr.addstr(max_y + 2, 0, "A wall!")
         result = m.collision(stdscr)
         if (result != 0):
             h.hp -= result.damage
@@ -60,7 +61,6 @@ while True:
             h.gold += result.gold
     elif chr(key) in look_keys:
         m.look_at(stdscr, chr(key))
-        o.hello2(stdscr)
     elif chr(key) in attack_keys:
         result = m.attack(stdscr, chr(key))
         if (result != 0):
