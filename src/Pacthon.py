@@ -1,5 +1,5 @@
 from Animation import *
-from Important import debug
+from Important import debug, max_y
 from Map import Map
 from Objects import Objects
 from unicurses import *
@@ -32,9 +32,9 @@ show_help()
 
 while (stdscr.getch() in ignore_keys):
     stdscr.getch()
-m = Map()
+m = Map(o)
 stdscr.erase()
-m.draw(stdscr, o)
+m.draw(stdscr)
 
 licznik = 0
 
@@ -48,24 +48,27 @@ while True:
         o.spawn('item')
         o.spawn('gold')
         o.spawn('monster')
+        o.spawn('wall')
 
     if (key in move_keys):
-        h.ster(key)
-        result = m.collision(stdscr, o)
+        if (m.ster(key)):
+            stdscr.addstr(max_y + 3, 0, "A wall!")
+        result = m.collision(stdscr)
         if (result != 0):
             h.hp -= result.damage
             h.experience += result.experience
             h.gold += result.gold
     elif chr(key) in look_keys:
-        m.look_at(stdscr, o, chr(key))
+        m.look_at(stdscr, chr(key))
+        o.hello2(stdscr)
     elif chr(key) in attack_keys:
-        result = m.attack(stdscr, o, chr(key))
+        result = m.attack(stdscr, chr(key))
         if (result != 0):
             h.hp -= result.damage
             h.experience += result.experience
             h.gold += result.gold
 
-    objects_left = o.count()
+    objects_left = m.objects.count()
     if (chr(key) == 'q' or h.hp <= 0 or objects_left == 0):
         stdscr.erase()
         stdscr.addstr(0, 1, "final score:" + str(5 * h.experience + 4 * h.gold + 10 * h.hp - licznik))
@@ -73,6 +76,6 @@ while True:
         break
 
     licznik += 1
-    m.draw(stdscr, o)
+    m.draw(stdscr)
 
 stdscr.getch()

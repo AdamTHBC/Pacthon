@@ -2,17 +2,18 @@ import random
 
 from Gold import Gold
 from Hero import Hero
-from Important import max_x, max_y, amountItem, amountGold, amountMonster
+from Important import *
 from Item import Item
 from Monster import Monster
+from Wall import Wall
 
 
 class Objects:
     def __init__(self):
         self.l = []
-        self.lists = {'items': [], 'monsters': [], 'gold': [], 'hero': Hero()}
+        self.lists = {'items': [], 'monsters': [], 'gold': [], 'walls': [], 'hero': Hero()}
         self.lists.get('hero')
-        self.list_keys = ['items', 'monsters', 'gold']
+        self.list_keys = ['items', 'monsters', 'gold', 'walls']
         self.non_lists = ['hero']
         for x in range(amountItem):
             self.spawn('item')
@@ -20,6 +21,8 @@ class Objects:
             self.spawn('gold')
         for x in range(amountMonster):
             self.spawn('monster')
+        for x in range(amountWall):
+            self.spawn('wall')
 
     def check_limit(self):
         object_count = len(self.non_lists)
@@ -74,6 +77,20 @@ class Objects:
             self.lists.get('items').append(Item(new_x, new_y))
         elif (object_type == 'gold'):
             self.lists.get('gold').append(Gold(new_x, new_y))
+        elif (object_type == 'wall'):
+            self.lists.get('walls').append(Wall(new_x, new_y))
+
+    def get_object(self, x, y):
+        """returns object at given coords or None if empty"""
+        for i in self.list_keys:
+            for j in self.lists.get(i):
+                if (j.x == x and j.y == y):
+                    return j
+        for i in self.non_lists:
+            j = self.lists.get(i)
+            if (j.x == x and j.y == y):
+                return j
+        return None
 
     def count(self):
         result = 0
@@ -91,3 +108,14 @@ class Objects:
         for i in self.non_lists:
             self.lists.get(i).hello(stdscr, y)
             y += 1
+
+    def hello2(self, stdscr):
+        y = 5
+        for i in range(max_x):
+            for j in range(max_y):
+                k = self.get_object(i, j)
+                if (k != None):
+                    k.hello(stdscr, y)
+                    y += 1
+                j += 1
+            i += 1
