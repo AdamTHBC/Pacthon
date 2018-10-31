@@ -1,8 +1,10 @@
+from Animation import *
 from Important import debug
 from Map import Map
 from Objects import Objects
 from unicurses import *
 
+frate = .200
 
 def show_help():
     stdscr.addstr(0, 0, """
@@ -25,6 +27,7 @@ stdscr = initscr()
 noecho()
 curs_set(False)
 
+show_animation(stdscr)
 show_help()
 
 while (stdscr.getch() in ignore_keys):
