@@ -4,11 +4,9 @@ from Map_Object import MapObject
 
 
 class Gold(MapObject):
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-        self.mark = 'G'
-        self.type_name = 'Gold'
+    mark = 'G'
+    type_name = 'Gold'
+
 
     def collision_result(self, stdscr):
         stdscr.addstr(max_y + 2, 0, "yum!")
