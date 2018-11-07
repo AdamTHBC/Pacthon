@@ -1,5 +1,4 @@
 from Event_Result import EventResult
-from Important import max_y
 from Map_Object import MapObject
 
 
@@ -8,13 +7,9 @@ class Wall(MapObject):
     type_name = 'Wall'
     obstacle = True
 
-    def collision_result(self, stdscr):
-        stdscr.addstr(max_y + 2, 0, "Bump")
-        return EventResult(True, 0, 1, 1)
+    def collision_result(self):
+        return EventResult(False, 0, 0, 0)
 
-    def defeat_result(self, stdscr):
-        stdscr.addstr(max_y + 2, 0, "It hurt!")
+    def defeat_result(self):
         return EventResult(True, 1, 1, 1)
 
-    def response(self, stdscr):
-        stdscr.addstr(max_y + 2, 0, "It's a wall! Maybe it can break..?")

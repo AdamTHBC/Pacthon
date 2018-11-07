@@ -1,16 +1,15 @@
 from Animation import *
-from Important import debug, max_y
+from Important import debug
 from Map import Map
 from Objects import Objects
 from unicurses import *
 
-frate = .200
 
 def show_help():
     stdscr.addstr(0, 0, """
     arrows - move
-    wsad - look
-    ijkl - attack
+    """ + look_keys + """ - look
+    """ + attack_keys + """- attack
     q - quit
     any button - Start
     """)
@@ -52,9 +51,7 @@ while True:
         o.spawn('food')
 
     if (key in move_keys):
-        if (m.ster(key)):
-            stdscr.addstr(max_y + 2, 0, "A wall!")
-        result = m.collision(stdscr)
+        result = m.ster(stdscr, key)
         if (result != 0):
             h.hp -= result.damage
             h.experience += result.experience

@@ -97,6 +97,23 @@ class Objects:
                 return j
         return None
 
+    def remove_object(self, removed_object):
+        """removes given object"""
+        x = removed_object.x
+        y = removed_object.y
+        for i in self.list_keys:
+            for j in self.lists.get(i):
+                if (j.x == x and j.y == y):
+                    self.lists.get(i).remove(j)
+                    return 0
+        for i in self.non_lists:
+            j = self.lists.get(i)
+            if (j.x == x and j.y == y):
+                self.non_lists.remove(i)
+                return 0
+        return 1
+
+
     def count(self):
         result = 0
         for i in self.list_keys:

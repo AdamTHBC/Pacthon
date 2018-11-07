@@ -5,7 +5,7 @@ from Important import max_x
 class MapObject:
     """Abstract class for objects on the map"""
     mark = '?'
-    type_name = 'any object'
+    type_name = 'default object'
     obstacle = False
 
     def __init__(self, x, y):
@@ -24,7 +24,3 @@ class MapObject:
         """What a colliding hero will get"""
         return EventResult()
 
-    def response(self):
-        """How will it respond to hero's 'talk' action"""
-        "will not"
-        return ""

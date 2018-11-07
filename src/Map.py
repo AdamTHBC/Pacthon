@@ -1,6 +1,5 @@
-from Important import max_x, max_y
+from Important import *
 from unicurses import *
-
 
 class Map:
     def __init__(self, objects):
@@ -58,11 +57,10 @@ class Map:
 
         stdscr.refresh()
 
-    def move(self, actor, direction):
+    def move(self, msgscr, actor, direction):
         """move an actor in specified direction, or return 1 if hit a wall"""
         tmp_x = actor.x
         tmp_y = actor.y
-
         if (direction == 1):
             tmp_y += 1
         if (direction == 2):
@@ -71,39 +69,46 @@ class Map:
             tmp_y -= 1
         if (direction == 4):
             tmp_x -= 1
+        target = self.objects.get_object(tmp_x, tmp_y)
 
         "check if map border was hit"
         if (tmp_x == 0 or tmp_x > max_x or tmp_y == 0 or tmp_y > max_y):
-            "Hit a wall"
-            return 1
+            msgscr.addstr(max_y + 2, 0, "World's end")
+            return 0
 
         "check if obstacle was hit"
-        o = self.objects.get_object(tmp_x, tmp_y)
-        if (o != None and o.obstacle):
-            return 1
+        if (target == None):
+            actor.x = tmp_x
+            actor.y = tmp_y
+            return 0
 
-        "free space"
-        actor.x = tmp_x
-        actor.y = tmp_y
-        return 0
+        result = target.collision_result()
+        if (result.remove == True):
+            self.objects.remove_object(target)
+        message = collision_message.get(target.type_name)
+        msgscr.addstr(max_y + 2, 0, message)
 
-    def ster(self, key):
+        if (target.obstacle == False):
+            actor.x = tmp_x
+            actor.y = tmp_y
+        return result
+
+    def ster(self, msgscr, key):
         """read control input, return 1 if hit a wall"""
         if key == 65:  # UP
-            return self.move(self.objects.lists.get('hero'), 3)
+            return self.move(msgscr, self.objects.lists.get('hero'), 3)
         if key == 66:  # DOWN
-            return self.move(self.objects.lists.get('hero'), 1)
+            return self.move(msgscr, self.objects.lists.get('hero'), 1)
         if key == 67:  # RIGHT
-            return self.move(self.objects.lists.get('hero'), 2)
+            return self.move(msgscr, self.objects.lists.get('hero'), 2)
         if key == 68:  # LEFT
-            return self.move(self.objects.lists.get('hero'), 4)
+            return self.move(msgscr, self.objects.lists.get('hero'), 4)
         else:
             "nothing"
 
-    def look_at(self, stdscr, direction):
+    def look_at(self, msgscr, direction):
         look_x = self.objects.lists.get('hero').x
         look_y = self.objects.lists.get('hero').y
-
         if direction == 'w':
             look_y -= 1
         if direction == 's':
@@ -112,15 +117,15 @@ class Map:
             look_x -= 1
         if direction == 'd':
             look_x += 1
-        for i in self.objects.list_keys:
-            for j in self.objects.lists.get(i):
-                if (look_x == j.x and look_y == j.y):
-                    j.response(stdscr)
+        target = self.objects.get_object(look_x, look_y)
+        if (target == None):
+            return 0
+        message = look_message.get(target.type_name)
+        msgscr.addstr(max_y + 2, 0, message)
 
-    def attack(self, stdscr, direction):
+    def attack(self, msgscr, direction):
         attack_x = self.objects.lists.get('hero').x
         attack_y = self.objects.lists.get('hero').y
-
         if direction == 'i':
             attack_y -= 1
         if direction == 'k':
@@ -129,24 +134,17 @@ class Map:
             attack_x -= 1
         if direction == 'l':
             attack_x += 1
-        for i in self.objects.list_keys:
-            for j in self.objects.lists.get(i):
-                if (attack_x == j.x and attack_y == j.y):
-                    result = j.defeat_result(stdscr)
-                    if (result.remove == True):
-                        self.objects.lists.get(i).remove(j)
-                    return result
-        return 0
+        target = self.objects.get_object(attack_x, attack_y)
 
-    def collision(self, stdscr):
-        for i in self.objects.list_keys:
-            for j in self.objects.lists.get(i):
-                if (self.objects.lists.get('hero').x == j.x and self.objects.lists.get('hero').y == j.y):
-                    result = j.collision_result(stdscr)
-                    if (result.remove == True):
-                        self.objects.lists.get(i).remove(j)
-                    return result
-        return 0
+        if (target == None):
+            return 0
+
+        result = target.defeat_result()
+        if (result.remove == True):
+            self.objects.remove_object(target)
+        message = attack_message.get(target.type_name)
+        msgscr.addstr(max_y + 2, 0, message)
+        return result
 
     def __del__(self):
         endwin()
