@@ -9,6 +9,12 @@ amountWall = 10
 amountFood = 5
 debug = False
 
+ignore_keys = [27, 91]
+move_keys = [65, 66, 67, 68]
+look_keys = "wasd"
+attack_keys = "ijkl"
+
+
 look_message = {
     'any object': "default",
     'Item': "It's a nice item! Pick it up",
