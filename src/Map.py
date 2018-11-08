@@ -251,6 +251,7 @@ class Map:
         h = self.objects.lists.get('hero')
         if (key in move_keys):
             result = self.ster(key)
+            h.steps += 1
             if (result != 0):
                 h.hp -= result.damage
                 h.experience += result.experience
@@ -274,7 +275,7 @@ class Map:
         objects_left = self.objects.count()
         if (chr(key) == 'q' or h.hp <= 0 or objects_left == 0):
             self.stdscr.erase()
-            self.stdscr.addstr(0, 1, "final score:" + str(5 * h.experience + 4 * h.gold + 10 * h.hp))
+            self.stdscr.addstr(0, 1, "final score:" + str(5 * h.experience + 4 * h.gold + 10 * h.hp - h.steps))
             self.stdscr.addstr(1, 5, "THE END")
             return False
         return True

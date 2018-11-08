@@ -9,6 +9,7 @@ class Hero(MapObject):
     obstacle = False
 
     def __init__(self):
+        self.steps = 0
         self.x = int(max_x / 2)
         self.y = int(max_y / 2)
         self.gold = 0
