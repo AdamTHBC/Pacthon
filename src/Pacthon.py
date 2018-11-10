@@ -1,4 +1,4 @@
-from Map import Map
+from Engine import Engine
 from Objects import Objects
 from unicurses import *
 
@@ -6,10 +6,13 @@ stdscr = initscr()
 noecho()
 curs_set(False)
 
-m = Map(stdscr, Objects())
+engine = Engine(stdscr, Objects())
 
-m.game_start()
-while m.action():
+engine.game_start()
+key = stdscr.getch()
+while engine.action(key):
     """game is running"""
+    key = stdscr.getch()
 
+"""pres any button to quit"""
 stdscr.getch()

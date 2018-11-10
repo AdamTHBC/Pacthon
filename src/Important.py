@@ -2,11 +2,6 @@
 
 max_x = 20
 max_y = 10
-amountItem = 10
-amountGold = 5
-amountMonster = 10
-amountWall = 10
-amountFood = 5
 debug = False
 
 ignore_keys = [27, 91]
@@ -14,6 +9,20 @@ move_keys = [65, 66, 67, 68]
 look_keys = "wasd"
 attack_keys = "ijkl"
 
+amountItem = 10
+amountGold = 5
+amountMonster = 10
+amountWall = 10
+amountFood = 5
+
+# not used yet
+object_amount = {
+    'Item': 10,
+    'Monster': 10,
+    'Gold': 5,
+    'Wall': 10,
+    'Food': 5
+}
 
 look_message = {
     'any object': "default",

@@ -1,5 +1,10 @@
+from Food import Food
+from Gold import Gold
 from Hero import Hero
 from Important import *
+from Item import Item
+from Monster import Monster
+from Wall import Wall
 
 
 class Objects:
@@ -49,6 +54,18 @@ class Objects:
             if (j.x == x and j.y == y):
                 return j
         return None
+
+    def create_object(self, object_type, x, y):
+        if (object_type == 'monster'):
+            self.lists.get('monsters').append(Monster(x, y))
+        elif (object_type == 'item'):
+            self.lists.get('items').append(Item(x, y))
+        elif (object_type == 'gold'):
+            self.lists.get('gold').append(Gold(x, y))
+        elif (object_type == 'wall'):
+            self.lists.get('walls').append(Wall(x, y))
+        elif (object_type == 'food'):
+            self.lists.get('food').append(Food(x, y))
 
     def remove_object(self, removed_object):
         """removes given object"""
