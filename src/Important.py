@@ -21,7 +21,10 @@ object_amount = {
     'Monster': 10,
     'Gold': 5,
     'Wall': 10,
-    'Food': 5
+    'Food': 5,
+    'StairsUp': 1,
+    'StairsDown': 1,
+    'Hero': 1
 }
 
 look_message = {
@@ -31,6 +34,8 @@ look_message = {
     'Gold': "It's a shiny gold! Pick it up",
     'Wall': "It's a wall! Maybe it can break..?",
     'Food': "Warm and healthy food",
+    'StairsUp': "We can return to a safer place!",
+    'StairsDown': "We can travel to a cooler place!",
     'Hero': "You need a mirror for that"
 }
 
@@ -41,6 +46,8 @@ attack_message = {
     'Gold': "Don't attack gold :(",
     'Wall': "It hurt!",
     'Food': "Worst idea ever",
+    'StairsUp': "Stairs are not impressed",
+    'StairsDown': "Stairs are not impressed",
     'Hero': "You need an evil twin for that"
 }
 
@@ -51,5 +58,7 @@ collision_message = {
     'Gold': "Oh yeah!",
     'Wall': "Bump",
     'Food': "Delicious",
+    'StairsUp': "Available only in full version",
+    'StairsDown': "Available only in full version",
     'Hero': "You need a clone for that"
 }

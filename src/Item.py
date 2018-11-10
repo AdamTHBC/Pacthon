@@ -3,7 +3,7 @@ from Map_Object import MapObject
 
 
 class Item(MapObject):
-    mark = 'O'
+    mark = 'I'
     type_name = 'Item'
 
     def collision_result(self):

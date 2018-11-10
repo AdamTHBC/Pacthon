@@ -4,16 +4,17 @@ from Hero import Hero
 from Important import *
 from Item import Item
 from Monster import Monster
+from Stairs import StairsUp, StairsDown
 from Wall import Wall
 
 
 class Objects:
     def __init__(self):
         self.l = []
-        self.lists = {'items': [], 'monsters': [], 'gold': [], 'walls': [], 'food': [], 'hero': Hero()}
-        self.lists.get('hero')
-        self.list_keys = ['items', 'monsters', 'gold', 'walls', 'food']
-        self.non_lists = ['hero']
+        self.lists = {'Item': [], 'Monster': [], 'Gold': [], 'Wall': [], 'Food': [],
+                      'StairsUp': StairsUp(), 'StairsDown': StairsDown(), 'Hero': Hero()}
+        self.list_keys = ['Item', 'Monster', 'Gold', 'Wall', 'Food']
+        self.non_lists = ['StairsUp', 'StairsDown', 'Hero']
 
     def check_limit(self):
         object_count = len(self.non_lists)
@@ -56,16 +57,16 @@ class Objects:
         return None
 
     def create_object(self, object_type, x, y):
-        if (object_type == 'monster'):
-            self.lists.get('monsters').append(Monster(x, y))
-        elif (object_type == 'item'):
-            self.lists.get('items').append(Item(x, y))
-        elif (object_type == 'gold'):
-            self.lists.get('gold').append(Gold(x, y))
-        elif (object_type == 'wall'):
-            self.lists.get('walls').append(Wall(x, y))
-        elif (object_type == 'food'):
-            self.lists.get('food').append(Food(x, y))
+        if (object_type == 'Monster'):
+            self.lists.get(object_type).append(Monster(x, y))
+        elif (object_type == 'Item'):
+            self.lists.get(object_type).append(Item(x, y))
+        elif (object_type == 'Gold'):
+            self.lists.get(object_type).append(Gold(x, y))
+        elif (object_type == 'Wall'):
+            self.lists.get(object_type).append(Wall(x, y))
+        elif (object_type == 'Food'):
+            self.lists.get(object_type).append(Food(x, y))
 
     def remove_object(self, removed_object):
         """removes given object"""
@@ -82,7 +83,6 @@ class Objects:
                 self.non_lists.remove(i)
                 return 0
         return 1
-
 
     def count(self):
         result = 0

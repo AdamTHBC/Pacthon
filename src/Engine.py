@@ -13,15 +13,15 @@ class Engine:
         self.sttscr = stdscr  # status
         self.errscr = stdscr  # errors
         for x in range(amountItem):
-            self.spawn('item')
+            self.spawn('Item')
         for x in range(amountGold):
-            self.spawn('gold')
+            self.spawn('Gold')
         for x in range(amountMonster):
-            self.spawn('monster')
+            self.spawn('Monster')
         for x in range(amountWall):
-            self.spawn('wall')
+            self.spawn('Wall')
         for x in range(amountFood):
-            self.spawn('food')
+            self.spawn('Food')
 
     def __del__(self):
         endwin()
@@ -41,7 +41,7 @@ class Engine:
         self.errscr.erase()
 
     def draw(self):
-        hero = self.map.objects.lists.get('hero')
+        hero = self.map.objects.lists.get('Hero')
         """draw map"""
         self.map.draw()
         """draw stats"""
@@ -113,19 +113,19 @@ class Engine:
     def ster(self, key):
         """read control input, return 1 if hit a wall"""
         if key == 65:  # UP
-            return self.move(self.map.objects.lists.get('hero'), 3)
+            return self.move(self.map.objects.lists.get('Hero'), 3)
         if key == 66:  # DOWN
-            return self.move(self.map.objects.lists.get('hero'), 1)
+            return self.move(self.map.objects.lists.get('Hero'), 1)
         if key == 67:  # RIGHT
-            return self.move(self.map.objects.lists.get('hero'), 2)
+            return self.move(self.map.objects.lists.get('Hero'), 2)
         if key == 68:  # LEFT
-            return self.move(self.map.objects.lists.get('hero'), 4)
+            return self.move(self.map.objects.lists.get('Hero'), 4)
         else:
             "nothing"
 
     def look_at(self, direction):
-        look_x = self.map.objects.lists.get('hero').x
-        look_y = self.map.objects.lists.get('hero').y
+        look_x = self.map.objects.lists.get('Hero').x
+        look_y = self.map.objects.lists.get('Hero').y
         if direction == 'w':
             look_y -= 1
         if direction == 's':
@@ -141,8 +141,8 @@ class Engine:
         self.msgscr.addstr(max_y + 2, 0, message)
 
     def attack(self, direction):
-        attack_x = self.map.objects.lists.get('hero').x
-        attack_y = self.map.objects.lists.get('hero').y
+        attack_x = self.map.objects.lists.get('Hero').x
+        attack_y = self.map.objects.lists.get('Hero').y
         if direction == 'i':
             attack_y -= 1
         if direction == 'k':
@@ -185,14 +185,16 @@ class Engine:
 
     def action_spawn(self, key):
         if (chr(key) == 'n' and debug == True):
-            self.spawn('item')
-            self.spawn('gold')
-            self.spawn('monster')
-            self.spawn('wall')
-            self.spawn('food')
+            self.spawn('Item')
+            self.spawn('Gold')
+            self.spawn('Monster')
+            self.spawn('Wall')
+            self.spawn('Food')
+            self.errscr.addstr(max_y + 5, 0, "Can't create more objects!")
+            return
 
     def action_move(self, key):
-        h = self.map.objects.lists.get('hero')
+        h = self.map.objects.lists.get('Hero')
         if (key in move_keys):
             result = self.ster(key)
             h.steps += 1
@@ -206,7 +208,7 @@ class Engine:
             self.look_at(chr(key))
 
     def action_attack(self, key):
-        h = self.map.objects.lists.get('hero')
+        h = self.map.objects.lists.get('Hero')
         if chr(key) in attack_keys:
             result = self.attack(chr(key))
             if (result != 0):
@@ -215,7 +217,7 @@ class Engine:
                 h.gold += result.gold
 
     def check_quit(self, key):
-        h = self.map.objects.lists.get('hero')
+        h = self.map.objects.lists.get('Hero')
         objects_left = self.map.objects.count()
         if (chr(key) == 'q' or h.hp <= 0 or objects_left == 0):
             self.all_erase()
