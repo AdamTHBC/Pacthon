@@ -7,7 +7,7 @@ class Food(MapObject):
     type_name = 'Food'
 
     def collision_result(self):
-        return EventResult(True, -1, 0, 0)
+        return EventResult(self.hp, -1)
 
-    def defeat_result(self):
-        return EventResult(True)
+    def attack_result(self, damage):
+        return EventResult(damage)

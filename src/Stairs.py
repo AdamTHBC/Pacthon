@@ -11,12 +11,13 @@ class StairsUp(MapObject):
     def __init__(self):
         self.x = 1
         self.y = 1
+        self.hp = self.max_hp
 
     def collision_result(self):
-        return EventResult(False)
+        return EventResult()
 
-    def defeat_result(self):
-        return EventResult(False)
+    def attack_result(self, damage):
+        return EventResult()
 
 
 class StairsDown(MapObject):
@@ -27,9 +28,10 @@ class StairsDown(MapObject):
     def __init__(self):
         self.x = max_x
         self.y = max_y
+        self.hp = self.max_hp
 
     def collision_result(self):
-        return EventResult(False)
+        return EventResult()
 
-    def defeat_result(self):
-        return EventResult(False)
+    def attack_result(self, damage):
+        return EventResult()

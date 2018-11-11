@@ -99,16 +99,18 @@ class Engine:
             actor.y = tmp_y
             return 0
 
-        result = target.collision_result()
-        if (result.remove == True):
-            self.map.objects.remove_object(target)
         message = collision_message.get(target.type_name)
         self.msgscr.addstr(max_y + 2, 0, message)
 
+        result = target.collision_result()
+        target.hp -= result.damage_to_self
         if (target.obstacle == False):
             actor.x = tmp_x
             actor.y = tmp_y
-        return result
+        if (target.hp <= 0):
+            self.map.objects.remove_object(target)
+            return result
+        return 0
 
     def ster(self, key):
         """read control input, return 1 if hit a wall"""
@@ -156,12 +158,23 @@ class Engine:
         if (target == None):
             return 0
 
-        result = target.defeat_result()
-        if (result.remove == True):
+        damage = self.map.objects.lists.get('Hero').damage
+        result = target.attack_result(damage)
+        target.hp -= result.damage_to_self
+
+        if (target.hp <= 0):
+            message = defeat_message.get(target.type_name)
+            self.msgscr.addstr(max_y + 2, 0, message)
+
             self.map.objects.remove_object(target)
-        message = attack_message.get(target.type_name)
-        self.msgscr.addstr(max_y + 2, 0, message)
-        return result
+            return result
+        else:
+            message = attack_message.get(target.type_name)
+            battle_log = "You attacked for " + str(damage) + \
+                         " and " + str(target.type_name) + " has " + str(target.hp) + " hp remaining."
+            self.msgscr.addstr(max_y + 2, 0, message + battle_log)
+
+            return 0
 
     ########################### control ############################
 
@@ -199,7 +212,7 @@ class Engine:
             result = self.ster(key)
             h.steps += 1
             if (result != 0):
-                h.hp -= result.damage
+                h.hp -= result.damage_to_actor
                 h.experience += result.experience
                 h.gold += result.gold
 
@@ -212,7 +225,7 @@ class Engine:
         if chr(key) in attack_keys:
             result = self.attack(chr(key))
             if (result != 0):
-                h.hp -= result.damage
+                h.hp -= result.damage_to_actor
                 h.experience += result.experience
                 h.gold += result.gold
 

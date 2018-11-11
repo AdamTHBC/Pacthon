@@ -7,8 +7,7 @@ class Gold(MapObject):
     type_name = 'Gold'
 
     def collision_result(self):
-        return EventResult(True, 0, 0, 3)
+        return EventResult(self.hp, 0, 0, 3)
 
-    def defeat_result(self):
-        return EventResult(True)
-
+    def attack_result(self, damage):
+        return EventResult(damage)

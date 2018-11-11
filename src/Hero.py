@@ -7,6 +7,7 @@ class Hero(MapObject):
     mark = 'H'
     type_name = 'Hero'
     obstacle = False
+    max_hp = 10
 
     def __init__(self):
         self.steps = 0
@@ -14,10 +15,11 @@ class Hero(MapObject):
         self.y = int(max_y / 2)
         self.gold = 0
         self.experience = 0
-        self.hp = 3
+        self.hp = self.max_hp
+        self.damage = 1
 
     def collision_result(self):
         """not really possible"""
 
-    def defeat_result(self):
+    def attack_result(self, damage):
         """game over"""

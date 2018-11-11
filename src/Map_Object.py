@@ -7,10 +7,12 @@ class MapObject:
     mark = '?'
     type_name = 'default object'
     obstacle = False
+    max_hp = 2
 
     def __init__(self, x, y):
         self.x = x
         self.y = y
+        self.hp = self.max_hp
 
     def hello(self, stdscr, y):
         """Say hi, help debug"""
@@ -20,7 +22,6 @@ class MapObject:
         """What a colliding hero will get"""
         return EventResult()
 
-    def defeat_result(self):
+    def attack_result(self, damage):
         """What a colliding hero will get"""
-        return EventResult()
-
+        return EventResult(damage)

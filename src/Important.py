@@ -39,16 +39,28 @@ look_message = {
     'Hero': "You need a mirror for that"
 }
 
-attack_message = {
+defeat_message = {
     'any object': "default",
-    'Item': "Don't attack items :(",
-    'Monster': "Grr!",
-    'Gold': "Don't attack gold :(",
+    'Item': ":(",
+    'Monster': "Gaah!",
+    'Gold': ":(",
     'Wall': "It hurt!",
-    'Food': "Worst idea ever",
+    'Food': ":(((",
     'StairsUp': "Stairs are not impressed",
     'StairsDown': "Stairs are not impressed",
     'Hero': "You need an evil twin for that"
+}
+
+attack_message = {
+    'any object': "default. ",
+    'Item': "Don't attack items :( ",
+    'Monster': "Grr! ",
+    'Gold': "Don't attack gold :( ",
+    'Wall': "It's falling on you! ",
+    'Food': "Worst idea ever. ",
+    'StairsUp': "Stairs are not impressed. ",
+    'StairsDown': "Stairs are not impressed. ",
+    'Hero': "You need an evil twin for that. "
 }
 
 collision_message = {

@@ -6,10 +6,10 @@ class Wall(MapObject):
     mark = 'W'
     type_name = 'Wall'
     obstacle = True
+    max_hp = 5
 
     def collision_result(self):
-        return EventResult(False, 0, 0, 0)
+        return EventResult()
 
-    def defeat_result(self):
-        return EventResult(True, 1, 1, 1)
-
+    def attack_result(self, damage):
+        return EventResult(damage, 1, 1, 1)

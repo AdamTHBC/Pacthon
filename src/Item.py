@@ -7,7 +7,7 @@ class Item(MapObject):
     type_name = 'Item'
 
     def collision_result(self):
-        return EventResult(True, 0, 1, 1)
+        return EventResult(self.hp, 0, 1, 1)
 
-    def defeat_result(self):
-        return EventResult(True)
+    def attack_result(self, damage):
+        return EventResult(damage)
