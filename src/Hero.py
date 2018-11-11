@@ -7,7 +7,7 @@ class Hero(MapObject):
     mark = 'H'
     type_name = 'Hero'
     obstacle = False
-    max_hp = 10
+    max_hp = 3
 
     def __init__(self):
         self.steps = 0

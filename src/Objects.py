@@ -5,6 +5,7 @@ from Important import *
 from Item import Item
 from Monster import Monster
 from Stairs import StairsUp, StairsDown
+from Sword import Sword
 from Wall import Wall
 
 
@@ -12,9 +13,9 @@ class Objects:
     def __init__(self):
         self.l = []
         self.lists = {'Item': [], 'Monster': [], 'Gold': [], 'Wall': [], 'Food': [],
-                      'StairsUp': StairsUp(), 'StairsDown': StairsDown(), 'Hero': Hero()}
+                      'StairsUp': StairsUp(), 'StairsDown': StairsDown(), 'Sword': Sword(), 'Hero': Hero()}
         self.list_keys = ['Item', 'Monster', 'Gold', 'Wall', 'Food']
-        self.non_lists = ['StairsUp', 'StairsDown', 'Hero']
+        self.non_lists = ['StairsUp', 'StairsDown', 'Sword', 'Hero']
 
     def check_limit(self):
         object_count = len(self.non_lists)

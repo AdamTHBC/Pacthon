@@ -7,6 +7,7 @@ class MapObject:
     mark = '?'
     type_name = 'default object'
     obstacle = False
+    artifact = False
     max_hp = 2
 
     def __init__(self, x, y):

@@ -107,6 +107,14 @@ class Engine:
         if (target.obstacle == False):
             actor.x = tmp_x
             actor.y = tmp_y
+
+        actor.hp -= result.damage_to_actor
+        if (actor.hp > actor.max_hp):
+            actor.hp = actor.max_hp
+
+        if (target.artifact):
+            self.stat_increase(target.artifact_boost())
+
         if (target.hp <= 0):
             self.map.objects.remove_object(target)
             return result
@@ -176,6 +184,15 @@ class Engine:
 
             return 0
 
+    def stat_increase(self, artifact_boost):
+        stat = artifact_boost[0]
+        value = artifact_boost[1]
+        h = self.map.objects.lists.get('Hero')
+        if (stat == 'damage'):
+            h.damage += value
+        if (stat == 'max_hp'):
+            h.max_hp += value
+
     ########################### control ############################
 
     def show_help(self):
@@ -212,7 +229,6 @@ class Engine:
             result = self.ster(key)
             h.steps += 1
             if (result != 0):
-                h.hp -= result.damage_to_actor
                 h.experience += result.experience
                 h.gold += result.gold
 
@@ -226,6 +242,8 @@ class Engine:
             result = self.attack(chr(key))
             if (result != 0):
                 h.hp -= result.damage_to_actor
+                if (h.hp > h.max_hp):
+                    h.hp = h.max_hp
                 h.experience += result.experience
                 h.gold += result.gold
 
