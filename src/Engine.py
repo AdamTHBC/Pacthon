@@ -41,9 +41,7 @@ class Engine:
         self.errscr.erase()
 
     def draw(self):
-        """draw map"""
         self.map.draw()
-        """draw stats"""
         self.show_stats()
 
         self.all_refresh()
@@ -54,6 +52,13 @@ class Engine:
         self.sttscr.addstr(2, max_x + 5, "HP " + str(hero.hp))
         self.sttscr.addstr(3, max_x + 5, "XP " + str(hero.experience))
         self.sttscr.addstr(4, max_x + 5, "G " + str(hero.gold))
+
+    def show_message(self, actor, message):
+        if (actor.type_name == 'Hero'):
+            self.msgscr.addstr(max_y + 2, 0, message)
+
+    def show_error(self, message):
+        self.errscr.addstr(max_y + 5, 0, message)
 
     def show_help(self):
         self.map.stdscr.addstr(0, 0, """
@@ -71,7 +76,7 @@ class Engine:
 
         "verify if object limit not reached"
         if (self.map.objects.check_limit()):
-            self.errscr.addstr(max_y + 5, 0, "Can't create more objects!")
+            self.show_error("Can't create more objects!")
             return
 
         "roll new coords"
@@ -87,34 +92,32 @@ class Engine:
         "create object otherwise"
         self.map.objects.create_object(object_type, new_x, new_y)
 
-    def move(self, actor, direction):
-        """move an actor in specified direction, or return 1 if hit a wall"""
+    def move(self, actor, key):
+        """move an actor in specified direction, return collision result or 0"""
         tmp_x = actor.x
         tmp_y = actor.y
-        if (direction == 1):
-            tmp_y += 1
-        if (direction == 2):
-            tmp_x += 1
-        if (direction == 3):
+        if (key == 65):  # UP
             tmp_y -= 1
-        if (direction == 4):
+        if (key == 66):  # DOWN
+            tmp_y += 1
+        if (key == 67):  # RIGHT
+            tmp_x += 1
+        if (key == 68):  # LEFT
             tmp_x -= 1
         target = self.map.objects.get_object(tmp_x, tmp_y)
 
-        "check if map border was hit"
+        "case 1: border"
         if (tmp_x == 0 or tmp_x > max_x or tmp_y == 0 or tmp_y > max_y):
-            self.msgscr.addstr(max_y + 2, 0, "World's end")
+            self.show_message(actor, "World's end")
             return 0
 
-        "check if obstacle was hit"
+        "case 2: empty field"
         if (target == None):
             actor.x = tmp_x
             actor.y = tmp_y
             return 0
 
-        message = collision_message.get(target.type_name)
-        self.msgscr.addstr(max_y + 2, 0, message)
-
+        "case 3: collision - interaction"
         result = target.collision_result()
         target.hp -= result.damage_to_self
         if (target.obstacle == False):
@@ -122,84 +125,73 @@ class Engine:
             actor.y = tmp_y
 
         if (target.artifact):
-            self.stat_increase(target.artifact_boost())
+            self.stat_increase(actor, target.artifact_boost())
 
         if (target.hp <= 0):
             self.map.objects.remove_object(target)
+
+        message = collision_message.get(target.type_name)
+        self.show_message(actor, message)
+
         return result
 
-    def ster(self, key):
-        """read control input, return 1 if hit a wall"""
-        if key == 65:  # UP
-            return self.move(self.map.objects.lists.get('Hero'), 3)
-        if key == 66:  # DOWN
-            return self.move(self.map.objects.lists.get('Hero'), 1)
-        if key == 67:  # RIGHT
-            return self.move(self.map.objects.lists.get('Hero'), 2)
-        if key == 68:  # LEFT
-            return self.move(self.map.objects.lists.get('Hero'), 4)
-        else:
-            "nothing"
-
-    def look_at(self, direction):
-        look_x = self.map.objects.lists.get('Hero').x
-        look_y = self.map.objects.lists.get('Hero').y
-        if direction == 'w':
+    def look_at(self, actor, key):
+        """check object near hero, get some information"""
+        look_x = actor.x
+        look_y = actor.y
+        if (key == 'w'):  # UP
             look_y -= 1
-        if direction == 's':
+        if (key == 's'):  # DOWN
             look_y += 1
-        if direction == 'a':
+        if (key == 'a'):  # RIGHT
             look_x -= 1
-        if direction == 'd':
+        if (key == 'd'):  # LEFT
             look_x += 1
         target = self.map.objects.get_object(look_x, look_y)
         if (target == None):
             return 0
         message = look_message.get(target.type_name)
-        self.msgscr.addstr(max_y + 2, 0, message)
+        self.show_message(actor, message)
 
-    def attack(self, direction):
-        attack_x = self.map.objects.lists.get('Hero').x
-        attack_y = self.map.objects.lists.get('Hero').y
-        if direction == 'i':
+    def attack(self, actor, key):
+        attack_x = actor.x
+        attack_y = actor.y
+        if (key == 'i'):  # UP
             attack_y -= 1
-        if direction == 'k':
+        if (key == 'k'):  # DOWN
             attack_y += 1
-        if direction == 'j':
+        if (key == 'j'):  # RIGHT
             attack_x -= 1
-        if direction == 'l':
+        if (key == 'l'):  # LEFT
             attack_x += 1
         target = self.map.objects.get_object(attack_x, attack_y)
 
         if (target == None):
             return 0
 
-        damage = self.map.objects.lists.get('Hero').damage
-        result = target.attack_result(damage)
+        result = target.attack_result(actor.damage)
         target.hp -= result.damage_to_self
 
         if (target.hp <= 0):
             message = defeat_message.get(target.type_name)
-            self.msgscr.addstr(max_y + 2, 0, message)
-
+            self.show_message(actor, message)
             self.map.objects.remove_object(target)
             return result
         else:
             message = attack_message.get(target.type_name)
-            battle_log = "You attacked for " + str(damage) + \
+            battle_log = str(actor.type_name) + " attacked for " + str(actor.damage) + \
                          " and " + str(target.type_name) + " has " + str(target.hp) + " hp remaining."
-            self.msgscr.addstr(max_y + 2, 0, message + battle_log)
+            self.show_message(actor, message + battle_log)
 
             return 0
 
-    def stat_increase(self, artifact_boost):
+    def stat_increase(self, lucky_guy, artifact_boost):
         stat = artifact_boost[0]
         value = artifact_boost[1]
-        h = self.map.objects.lists.get('Hero')
         if (stat == 'damage'):
-            h.change_damage(value)
+            lucky_guy.change_damage(value)
         if (stat == 'max_hp'):
-            h.change_max_hp(value)
+            lucky_guy.change_max_hp(value)
 
     ########################### control ############################
 
@@ -219,21 +211,23 @@ class Engine:
             self.spawn('Monster')
             self.spawn('Wall')
             self.spawn('Food')
-            self.errscr.addstr(max_y + 5, 0, "Can't create more objects!")
             return
 
-    def action_move(self, key):
+    def action_move(self, actor, key):
+        """result of moving but only if arrow button was pressed"""
         if (key in move_keys):
-            self.map.objects.lists.get('Hero').steps += 1
-            self.map.objects.lists.get('Hero').apply_result(self.ster(key))
+            actor.steps += 1
+            actor.apply_result(self.move(actor, key))
 
-    def action_look(self, key):
+    def action_look(self, actor, key):
+        """result of looking at objects but only if attack button was pressed"""
         if chr(key) in look_keys:
-            self.look_at(chr(key))
+            self.look_at(actor, chr(key))
 
-    def action_attack(self, key):
+    def action_attack(self, actor, key):
+        """result of attack but only if attack button was pressed"""
         if chr(key) in attack_keys:
-            self.map.objects.lists.get('Hero').apply_result(self.attack(chr(key)))
+            actor.apply_result(self.attack(actor, chr(key)))
 
     def check_quit(self, key):
         h = self.map.objects.lists.get('Hero')
@@ -246,13 +240,19 @@ class Engine:
         return True
 
     def action(self, key):
+        """main function in the game
+        given input is put to all main actions and results are redrawn,
+        afterwards program is ready for another input.
+        Actor hard-coded to be hero, it shoulds change in the future."""
+        actor = self.map.objects.lists.get('Hero')
         if (key in ignore_keys):
             return True
         self.all_erase()
         self.action_spawn(key)
-        self.action_move(key)
-        self.action_look(key)
-        self.action_attack(key)
+        self.action_move(actor, key)
+        self.action_look(actor, key)
+        self.action_attack(actor, key)
         self.draw()
         is_over = self.check_quit(key)
+        "depending on result - continue, game over OR (TBD) next level"
         return is_over
