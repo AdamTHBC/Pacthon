@@ -41,15 +41,28 @@ class Engine:
         self.errscr.erase()
 
     def draw(self):
-        hero = self.map.objects.lists.get('Hero')
         """draw map"""
         self.map.draw()
         """draw stats"""
-        self.sttscr.addstr(1, max_x + 5, "HP " + str(hero.hp))
-        self.sttscr.addstr(2, max_x + 5, "XP " + str(hero.experience))
-        self.sttscr.addstr(3, max_x + 5, "G " + str(hero.gold))
+        self.show_stats()
 
         self.all_refresh()
+
+    def show_stats(self):
+        hero = self.map.objects.lists.get('Hero')
+        self.sttscr.addstr(1, max_x + 5, "LV " + str(hero.level))
+        self.sttscr.addstr(2, max_x + 5, "HP " + str(hero.hp))
+        self.sttscr.addstr(3, max_x + 5, "XP " + str(hero.experience))
+        self.sttscr.addstr(4, max_x + 5, "G " + str(hero.gold))
+
+    def show_help(self):
+        self.map.stdscr.addstr(0, 0, """
+        arrows - move
+        """ + look_keys + """ - look
+        """ + attack_keys + """  - attack
+        q - quit
+        any button - Start
+        """)
 
     ########################### interactions ############################
 
@@ -108,17 +121,12 @@ class Engine:
             actor.x = tmp_x
             actor.y = tmp_y
 
-        actor.hp -= result.damage_to_actor
-        if (actor.hp > actor.max_hp):
-            actor.hp = actor.max_hp
-
         if (target.artifact):
             self.stat_increase(target.artifact_boost())
 
         if (target.hp <= 0):
             self.map.objects.remove_object(target)
-            return result
-        return 0
+        return result
 
     def ster(self, key):
         """read control input, return 1 if hit a wall"""
@@ -189,20 +197,11 @@ class Engine:
         value = artifact_boost[1]
         h = self.map.objects.lists.get('Hero')
         if (stat == 'damage'):
-            h.damage += value
+            h.change_damage(value)
         if (stat == 'max_hp'):
-            h.max_hp += value
+            h.change_max_hp(value)
 
     ########################### control ############################
-
-    def show_help(self):
-        self.map.stdscr.addstr(0, 0, """
-        arrows - move
-        """ + look_keys + """ - look
-        """ + attack_keys + """  - attack
-        q - quit
-        any button - Start
-        """)
 
     def game_start(self):
         show_animation(self.map.stdscr)
@@ -224,28 +223,17 @@ class Engine:
             return
 
     def action_move(self, key):
-        h = self.map.objects.lists.get('Hero')
         if (key in move_keys):
-            result = self.ster(key)
-            h.steps += 1
-            if (result != 0):
-                h.experience += result.experience
-                h.gold += result.gold
+            self.map.objects.lists.get('Hero').steps += 1
+            self.map.objects.lists.get('Hero').apply_result(self.ster(key))
 
     def action_look(self, key):
         if chr(key) in look_keys:
             self.look_at(chr(key))
 
     def action_attack(self, key):
-        h = self.map.objects.lists.get('Hero')
         if chr(key) in attack_keys:
-            result = self.attack(chr(key))
-            if (result != 0):
-                h.hp -= result.damage_to_actor
-                if (h.hp > h.max_hp):
-                    h.hp = h.max_hp
-                h.experience += result.experience
-                h.gold += result.gold
+            self.map.objects.lists.get('Hero').apply_result(self.attack(chr(key)))
 
     def check_quit(self, key):
         h = self.map.objects.lists.get('Hero')

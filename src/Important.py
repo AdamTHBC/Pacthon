@@ -78,3 +78,14 @@ collision_message = {
     'Sword': "The legnedary sword increases your damage. Nice.",
     'Hero': "You need a clone for that."
 }
+
+lvl_chart = {
+    1: 10,
+    2: 40,
+    3: 100,
+    4: 200,
+    5: 500,
+    6: 1000,
+    7: 2000,
+    8: 5000
+}

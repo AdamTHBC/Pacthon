@@ -12,4 +12,4 @@ class Wall(MapObject):
         return EventResult()
 
     def attack_result(self, damage):
-        return EventResult(damage, 1, 1, 1)
+        return EventResult(damage, -1, 1, 1)
