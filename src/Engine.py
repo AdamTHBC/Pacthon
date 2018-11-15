@@ -12,6 +12,7 @@ class Engine:
         self.msgscr = stdscr  # messages
         self.sttscr = stdscr  # status
         self.errscr = stdscr  # errors
+        self.inpscr = stdscr  # inputs
         for x in range(amountItem):
             self.spawn('Item')
         for x in range(amountGold):
@@ -57,15 +58,31 @@ class Engine:
         if (actor.type_name == 'Hero'):
             self.msgscr.addstr(max_y + 2, 0, message)
 
+
     def show_error(self, message):
         self.errscr.addstr(max_y + 5, 0, message)
+
+    def show_input(self, message):
+        self.inpscr.addstr(2, 0, "You've entered: ")
+        self.inpscr.addstr(3, 0, message)
+        self.inpscr.addstr(4, 0, "Accept? [y/n]")
+        key = self.inpscr.getkey()
+        if (key == "y"):
+            return 1
+        if (key == "n"):
+            return 0
+        return 2
+
+    def prompt_input(self, message):
+        self.inpscr.addstr(0, 0, message)
+        return self.inpscr.getstr()
 
     def show_help(self):
         self.map.stdscr.addstr(0, 0, """
         arrows - move
         """ + look_keys + """ - look
         """ + attack_keys + """  - attack
-        q - quit
+        [S]ave [L]oad [q]uit
         any button - Start
         """)
 
@@ -205,7 +222,7 @@ class Engine:
         self.draw()
 
     def action_spawn(self, key):
-        if (chr(key) == 'n' and debug == True):
+        if (key == 'n' and debug == True):
             self.spawn('Item')
             self.spawn('Gold')
             self.spawn('Monster')
@@ -221,18 +238,47 @@ class Engine:
 
     def action_look(self, actor, key):
         """result of looking at objects but only if attack button was pressed"""
-        if chr(key) in look_keys:
-            self.look_at(actor, chr(key))
+        if (key in look_keys):
+            self.look_at(actor, key)
 
     def action_attack(self, actor, key):
         """result of attack but only if attack button was pressed"""
-        if chr(key) in attack_keys:
-            actor.apply_result(self.attack(actor, chr(key)))
+        if (key in attack_keys):
+            actor.apply_result(self.attack(actor, key))
+
+    def action_saveload(self, actor, key):
+        if (key == 'S'):
+            prompt = "Save Game menu. Give savefile name."
+            savename = self.prompt_input(prompt)
+            result = self.show_input(savename)
+            self.inpscr.erase()
+            if (result == 0):
+                "return to map"
+            if (result == 1):
+                # sprawdz czy taki plik istnieje a jak tak to zapytaj czy nadpisac
+                message = "Game saved!"
+                self.show_message(actor, message)
+            if (result == 2):
+                self.action_saveload(actor, key)
+
+        if (key == 'L'):
+            prompt = "Load Game menu. Give savefile name."
+            savename = self.prompt_input(prompt)
+            result = self.show_input(savename)
+            self.inpscr.erase()
+            if (result == 0):
+                "return to map"
+            if (result == 1):
+                # sprawdz czy taki plik istnieje a jak nie to error
+                message = "Game Loaded!"
+                self.show_message(actor, message)
+            if (result == 2):
+                self.action_saveload(actor, key)
 
     def check_quit(self, key):
         h = self.map.objects.lists.get('Hero')
         objects_left = self.map.objects.count()
-        if (chr(key) == 'q' or h.hp <= 0 or objects_left == 0):
+        if (key == 'q' or h.hp <= 0 or objects_left == 0):
             self.all_erase()
             self.map.stdscr.addstr(0, 0, "final score: " + str(5 * h.experience + 4 * h.gold + 10 * h.hp - h.steps)
                                    + "\n\rTHE END")
@@ -245,13 +291,14 @@ class Engine:
         afterwards program is ready for another input.
         Actor hard-coded to be hero, it shoulds change in the future."""
         actor = self.map.objects.lists.get('Hero')
-        if (key in ignore_keys):
+        if (ord(key) in ignore_keys):
             return True
         self.all_erase()
         self.action_spawn(key)
-        self.action_move(actor, key)
+        self.action_move(actor, ord(key))
         self.action_look(actor, key)
         self.action_attack(actor, key)
+        self.action_saveload(actor, key)
         self.draw()
         is_over = self.check_quit(key)
         "depending on result - continue, game over OR (TBD) next level"

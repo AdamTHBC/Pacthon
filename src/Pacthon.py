@@ -7,12 +7,12 @@ noecho()
 curs_set(False)
 
 engine = Engine(stdscr, Objects())
-
 engine.game_start()
-key = stdscr.getch()
+
+key = stdscr.getkey()
 while engine.action(key):
     """game is running"""
-    key = stdscr.getch()
+    key = stdscr.getkey()
 
 """pres any button to quit"""
 stdscr.getch()
