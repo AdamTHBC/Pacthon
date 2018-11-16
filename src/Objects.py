@@ -2,7 +2,6 @@ from Food import Food
 from Gold import Gold
 from Hero import Hero
 from Important import *
-from Item import Item
 from Monster import Monster
 from Stairs import StairsUp, StairsDown
 from Sword import Sword
@@ -12,9 +11,9 @@ from Wall import Wall
 class Objects:
     def __init__(self):
         self.l = []
-        self.lists = {'Item': [], 'Monster': [], 'Gold': [], 'Wall': [], 'Food': [],
+        self.lists = {'Monster': [], 'Gold': [], 'Wall': [], 'Food': [],
                       'StairsUp': StairsUp(), 'StairsDown': StairsDown(), 'Sword': Sword(), 'Hero': Hero()}
-        self.list_keys = ['Item', 'Monster', 'Gold', 'Wall', 'Food']
+        self.list_keys = ['Monster', 'Gold', 'Wall', 'Food']
         self.non_lists = ['StairsUp', 'StairsDown', 'Sword', 'Hero']
 
     def check_limit(self):
@@ -60,8 +59,6 @@ class Objects:
     def create_object(self, object_type, x, y):
         if (object_type == 'Monster'):
             self.lists.get(object_type).append(Monster(x, y))
-        elif (object_type == 'Item'):
-            self.lists.get(object_type).append(Item(x, y))
         elif (object_type == 'Gold'):
             self.lists.get(object_type).append(Gold(x, y))
         elif (object_type == 'Wall'):

@@ -16,7 +16,9 @@ class Hero(MapObject):
         self.hp = self.max_hp
         self.gold = 0
         self.experience = 0
+        self.experience_factor = 1
         self.damage = 1
+        self.damage_factor = 1
 
     def collision_result(self):
         """not really possible"""
@@ -56,7 +58,7 @@ class Hero(MapObject):
 
     def change_xp(self, value):
         """modify hero's experience using value. check for level up"""
-        self.experience += value
+        self.experience += value * self.experience_factor
         while (self.level_up()):
             """increase level required number of times"""
 

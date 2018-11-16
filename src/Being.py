@@ -9,11 +9,7 @@ class Being(Interactive):
     can be attacked, can be looked at.
     May move independently.
     """
-    mark = '?'
     type_name = 'default interactive object'
-    obstacle = False
-    artifact = False
-    max_hp = 2
 
     def __init__(self, x, y):
         self.x = x

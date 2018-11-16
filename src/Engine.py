@@ -1,6 +1,7 @@
 import random
 
 from Animation import *
+from Dictionary_Text import *
 from Important import *
 from Map import Map
 from unicurses import *
@@ -13,8 +14,7 @@ class Engine:
         self.sttscr = stdscr  # status
         self.errscr = stdscr  # errors
         self.inpscr = stdscr  # inputs
-        for x in range(amountItem):
-            self.spawn('Item')
+        self.invscr = stdscr  # inventory
         for x in range(amountGold):
             self.spawn('Gold')
         for x in range(amountMonster):
@@ -186,7 +186,7 @@ class Engine:
         if (target == None):
             return 0
 
-        result = target.attack_result(actor.damage)
+        result = target.attack_result(actor.damage * actor.damage_factor)
         target.hp -= result.damage_to_self
 
         if (target.hp <= 0):
@@ -210,6 +210,15 @@ class Engine:
         if (stat == 'max_hp'):
             lucky_guy.change_max_hp(value)
 
+    def use_item(self, actor, item):
+        if (item.effect_type == None):
+            "nothing happened"
+        elif (item.effect_type == 'boost'):
+            self.stat_increase(actor, (item.area, item.value))
+            # remove item
+        elif (item.effect_type == 'action'):
+            "this I don't know"
+
     ########################### control ############################
 
     def game_start(self):
@@ -223,7 +232,6 @@ class Engine:
 
     def action_spawn(self, key):
         if (key == 'n' and debug == True):
-            self.spawn('Item')
             self.spawn('Gold')
             self.spawn('Monster')
             self.spawn('Wall')

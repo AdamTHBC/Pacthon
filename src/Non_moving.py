@@ -9,11 +9,7 @@ class NonMoving(Interactive):
     can not(?) attacked, can be looked at.
     May not move.
     """
-    mark = '?'
     type_name = 'default interactive object'
-    obstacle = False
-    artifact = False
-    max_hp = 2
 
     def __init__(self, x, y):
         self.x = x
