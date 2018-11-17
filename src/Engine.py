@@ -10,11 +10,12 @@ from unicurses import *
 class Engine:
     def __init__(self, stdscr, objects):
         self.map = Map(stdscr, objects)
-        self.msgscr = stdscr  # messages
-        self.sttscr = stdscr  # status
-        self.errscr = stdscr  # errors
-        self.inpscr = stdscr  # inputs
-        self.invscr = stdscr  # inventory
+        self.msgscr = stdscr  # main messages
+        self.sttscr = stdscr  # show status
+        self.errscr = stdscr  # show errors
+        self.inpscr = stdscr  # get inputs
+        self.invscr = stdscr  # inventory overview
+        self.itmscr = stdscr  # item description
         for x in range(amountGold):
             self.spawn('Gold')
         for x in range(amountMonster):
@@ -34,12 +35,18 @@ class Engine:
         self.msgscr.refresh()
         self.sttscr.refresh()
         self.errscr.refresh()
+        self.inpscr.refresh()
+        self.invscr.refresh()
+        self.itmscr.refresh()
 
     def all_erase(self):
         self.map.stdscr.erase()
         self.msgscr.erase()
         self.sttscr.erase()
         self.errscr.erase()
+        self.inpscr.erase()
+        self.invscr.erase()
+        self.itmscr.erase()
 
     def draw(self):
         self.map.draw()
@@ -58,7 +65,6 @@ class Engine:
         if (actor.type_name == 'Hero'):
             self.msgscr.addstr(max_y + 2, 0, message)
 
-
     def show_error(self, message):
         self.errscr.addstr(max_y + 5, 0, message)
 
@@ -76,6 +82,23 @@ class Engine:
     def prompt_input(self, message):
         self.inpscr.addstr(0, 0, message)
         return self.inpscr.getstr()
+
+    def show_inventory(self, actor):
+        """"""
+        "TODO - inventory - list of items held by actor"
+        self.invscr.erase()
+        self.invscr.addstr(0, 0, "| # |    Item name   ")
+        self.invscr.addstr(1, 0, "| 1 | Healing Potion ")
+        self.invscr.refresh()
+
+        # view item or use item or return?
+
+    def show_item(self, item):
+        """
+        if inventory open
+        if item found
+        """
+        item.view()
 
     def show_help(self):
         self.map.stdscr.addstr(0, 0, """
@@ -141,6 +164,7 @@ class Engine:
             actor.x = tmp_x
             actor.y = tmp_y
 
+        # TODO remake for new Item mechanism
         if (target.artifact):
             self.stat_increase(actor, target.artifact_boost())
 
@@ -209,6 +233,8 @@ class Engine:
             lucky_guy.change_damage(value)
         if (stat == 'max_hp'):
             lucky_guy.change_max_hp(value)
+        if (stat == 'hp'):
+            lucky_guy.change_hp(value)
 
     def use_item(self, actor, item):
         if (item.effect_type == None):
