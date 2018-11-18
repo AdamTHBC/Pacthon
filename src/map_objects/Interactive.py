@@ -1,11 +1,16 @@
-from Event_Result import EventResult
-from Important import max_x
+from src.Event_Result import EventResult
+from src.map_objects.Map_Object import MapObject
 
 
-class MapObject:
-    """Abstract class for objects on the map"""
+class Interactive(MapObject):
+    """
+    Abstract class for interactive objects on the map.
+    These could be beings (monsters, npcs)
+    or not moving (items, buildings)
+    can(?) be attacked, can be looked at.
+    """
     mark = '?'
-    type_name = 'default object'
+    type_name = 'default interactive object'
     obstacle = False
     artifact = False
     max_hp = 2
@@ -14,10 +19,6 @@ class MapObject:
         self.x = x
         self.y = y
         self.hp = self.max_hp
-
-    def hello(self, stdscr, y):
-        """Say hi, help debug"""
-        stdscr.addstr(y, max_x + 5, str(self.type_name) + ' ' + str(self.x) + ' ' + str(self.y))
 
     def collision_result(self):
         """What a colliding hero will get"""

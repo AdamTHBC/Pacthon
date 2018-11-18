@@ -1,20 +1,18 @@
-from Event_Result import EventResult
-from Interactive import Interactive
+from src.Event_Result import EventResult
+from src.map_objects.Interactive import Interactive
 
 
-class NonMoving(Interactive):
+class Being(Interactive):
     """
     Abstract class for living beings on the map.
-    These could be items, buildings, structures
-    can not(?) attacked, can be looked at.
-    May not move.
+    These could be monsters, npcs, companions
+    can be attacked, can be looked at.
+    May move independently.
     """
     type_name = 'default interactive object'
 
     def __init__(self, x, y):
-        self.x = x
-        self.y = y
-        self.hp = self.max_hp
+        super().__init__(x, y)
 
     def collision_result(self):
         """What a colliding hero will get"""

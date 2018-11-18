@@ -1,5 +1,5 @@
-from Event_Result import EventResult
-from Map_Object import MapObject
+from src.Event_Result import EventResult
+from src.map_objects.Map_Object import MapObject
 
 
 class Item(MapObject):
@@ -15,8 +15,9 @@ class Item(MapObject):
 
     mark = 'I'
     type_name = 'Item'
-    def __init__(self, ItemID):
-        self.hp = self.max_hp
+
+    def __init__(self, ItemID, x, y):
+        super().__init__(x, y)
         self.name = "Healing Potion"
         self.graphics = "( H )"
         self.description = "A red, glowing healing potion. Drinking it restores 2 HP."

@@ -1,6 +1,5 @@
-from Event_Result import EventResult
-from Important import max_x, max_y
-from Map_Object import MapObject
+from src.Event_Result import EventResult
+from src.map_objects.Map_Object import MapObject
 
 
 class StairsUp(MapObject):
@@ -8,10 +7,8 @@ class StairsUp(MapObject):
     type_name = 'StairsUp'
     obstacle = True
 
-    def __init__(self):
-        self.x = 1
-        self.y = 1
-        self.hp = self.max_hp
+    def __init__(self, x, y):
+        super().__init__(x, y)
 
     def collision_result(self):
         return EventResult()
@@ -25,10 +22,8 @@ class StairsDown(MapObject):
     type_name = 'StairsDown'
     obstacle = True
 
-    def __init__(self):
-        self.x = max_x
-        self.y = max_y
-        self.hp = self.max_hp
+    def __init__(self, x, y):
+        super().__init__(x, y)
 
     def collision_result(self):
         return EventResult()

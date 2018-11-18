@@ -1,6 +1,5 @@
-from Event_Result import EventResult
-from Important import max_x
-from Map_Object import MapObject
+from src.Event_Result import EventResult
+from src.map_objects.Map_Object import MapObject
 
 
 class Sword(MapObject):
@@ -8,10 +7,8 @@ class Sword(MapObject):
     type_name = 'Sword'
     artifact = True
 
-    def __init__(self):
-        self.x = max_x
-        self.y = 1
-        self.hp = self.max_hp
+    def __init__(self, x, y):
+        super().__init__(x, y)
 
     def collision_result(self):
         return EventResult(self.hp)

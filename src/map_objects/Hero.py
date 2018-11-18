@@ -1,5 +1,6 @@
-from Important import max_x, max_y, lvl_chart
-from Map_Object import MapObject
+from src.map_objects.Map_Object import MapObject
+from src.res.Important import lvl_chart
+
 
 class Hero(MapObject):
     """Main hero, only one"""
@@ -7,13 +8,11 @@ class Hero(MapObject):
     type_name = 'Hero'
     obstacle = False
 
-    def __init__(self):
+    def __init__(self, x, y):
+        super().__init__(x, y)
         self.steps = 0
-        self.x = int(max_x / 2)
-        self.y = int(max_y / 2)
         self.level = 1
         self.max_hp = 3
-        self.hp = self.max_hp
         self.gold = 0
         self.experience = 0
         self.experience_factor = 1

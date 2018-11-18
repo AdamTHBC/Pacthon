@@ -12,7 +12,7 @@ attack_keys = "ijkl"
 amountItem = 10
 amountGold = 5
 amountMonster = 10
-amountWall = 10
+amountWall = 5
 amountFood = 5
 
 # not used yet
@@ -26,8 +26,6 @@ object_amount = {
     'StairsDown': 1,
     'Hero': 1
 }
-
-
 
 lvl_chart = {
     1: 10,

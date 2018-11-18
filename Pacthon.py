@@ -1,6 +1,7 @@
-from Engine import Engine
-from Objects import Objects
 from unicurses import *
+
+from src.Engine import Engine
+from src.Objects import Objects
 
 stdscr = initscr()
 noecho()

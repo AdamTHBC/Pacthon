@@ -1,5 +1,4 @@
-from Animation import *
-from Important import *
+from src.res.Important import max_x, max_y
 
 
 class Map:

@@ -1,18 +1,16 @@
-from Food import Food
-from Gold import Gold
-from Hero import Hero
-from Important import *
-from Monster import Monster
-from Stairs import StairsUp, StairsDown
-from Sword import Sword
-from Wall import Wall
+from src.map_objects import *
+from src.map_objects.Hero import Hero
+from src.map_objects.Stairs import StairsDown, StairsUp
+from src.map_objects.Sword import Sword
+from src.res.Important import max_x, max_y
 
 
 class Objects:
     def __init__(self):
         self.l = []
         self.lists = {'Monster': [], 'Gold': [], 'Wall': [], 'Food': [],
-                      'StairsUp': StairsUp(), 'StairsDown': StairsDown(), 'Sword': Sword(), 'Hero': Hero()}
+                      'StairsUp': StairsUp(1, 1), 'StairsDown': StairsDown(max_x, max_y), 'Sword': Sword(max_x, 1),
+                      'Hero': Hero(int(max_x / 2), int(max_y / 2))}
         self.list_keys = ['Monster', 'Gold', 'Wall', 'Food']
         self.non_lists = ['StairsUp', 'StairsDown', 'Sword', 'Hero']
 

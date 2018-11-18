@@ -1,10 +1,11 @@
 import random
 
-from Animation import *
-from Dictionary_Text import *
-from Important import *
-from Map import Map
 from unicurses import *
+
+from src.Map import Map
+from src.res.Animation import *
+from src.res.Dictionary_Text import *
+from src.res.Important import *
 
 
 class Engine:

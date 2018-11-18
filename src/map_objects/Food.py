@@ -1,5 +1,5 @@
-from Event_Result import EventResult
-from Map_Object import MapObject
+from src.Event_Result import EventResult
+from src.map_objects.Map_Object import MapObject
 
 
 class Food(MapObject):
