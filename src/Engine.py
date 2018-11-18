@@ -3,9 +3,7 @@ import random
 from unicurses import *
 
 from src.Map import Map
-from src.res.Animation import *
-from src.res.Dictionary_Text import *
-from src.res.Important import *
+from src.res import *
 
 
 class Engine:

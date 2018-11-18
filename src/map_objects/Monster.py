@@ -1,8 +1,8 @@
 from src.Event_Result import EventResult
-from src.map_objects.Map_Object import MapObject
+from src.map_objects.Actor import Actor
 
 
-class Monster(MapObject):
+class Monster(Actor):
     mark = 'M'
     type_name = 'Monster'
     max_hp = 5

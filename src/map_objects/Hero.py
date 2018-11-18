@@ -1,8 +1,8 @@
-from src.map_objects.Map_Object import MapObject
+from src.map_objects.Actor import Actor
 from src.res.Important import lvl_chart
 
 
-class Hero(MapObject):
+class Hero(Actor):
     """Main hero, only one"""
     mark = 'H'
     type_name = 'Hero'

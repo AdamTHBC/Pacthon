@@ -2,9 +2,9 @@ from src.Event_Result import EventResult
 from src.map_objects.Interactive import Interactive
 
 
-class Being(Interactive):
+class Actor(Interactive):
     """
-    Abstract class for living beings on the map.
+    Abstract class for active on the map.
     These could be monsters, npcs, companions
     can be attacked, can be looked at.
     May move independently.

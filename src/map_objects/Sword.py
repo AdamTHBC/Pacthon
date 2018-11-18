@@ -1,8 +1,8 @@
 from src.Event_Result import EventResult
-from src.map_objects.Map_Object import MapObject
+from src.map_objects.Non_Actor import NonActor
 
 
-class Sword(MapObject):
+class Sword(NonActor):
     mark = 'S'
     type_name = 'Sword'
     artifact = True

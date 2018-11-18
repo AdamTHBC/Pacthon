@@ -1,7 +1,4 @@
 from src.map_objects import *
-from src.map_objects.Hero import Hero
-from src.map_objects.Stairs import StairsDown, StairsUp
-from src.map_objects.Sword import Sword
 from src.res.Important import max_x, max_y
 
 

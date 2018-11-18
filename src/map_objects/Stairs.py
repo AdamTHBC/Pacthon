@@ -1,8 +1,8 @@
 from src.Event_Result import EventResult
-from src.map_objects.Map_Object import MapObject
+from src.map_objects.Non_Actor import NonActor
 
 
-class StairsUp(MapObject):
+class StairsUp(NonActor):
     mark = 'O'
     type_name = 'StairsUp'
     obstacle = True
@@ -17,7 +17,7 @@ class StairsUp(MapObject):
         return EventResult()
 
 
-class StairsDown(MapObject):
+class StairsDown(NonActor):
     mark = 'X'
     type_name = 'StairsDown'
     obstacle = True
