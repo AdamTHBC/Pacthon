@@ -57,7 +57,7 @@ class Engine:
         hero = self.map.objects.lists.get('Hero')
         self.sttscr.addstr(1, max_x + 5, "LV " + str(hero.level))
         self.sttscr.addstr(2, max_x + 5, "HP " + str(hero.hp))
-        self.sttscr.addstr(3, max_x + 5, "XP " + str(hero.experience))
+        self.sttscr.addstr(3, max_x + 5, "XP " + str(hero.xp))
         self.sttscr.addstr(4, max_x + 5, "G " + str(hero.gold))
 
     def show_message(self, actor, message):
@@ -313,7 +313,7 @@ class Engine:
         objects_left = self.map.objects.count()
         if (key == 'q' or h.hp <= 0 or objects_left == 0):
             self.all_erase()
-            self.map.stdscr.addstr(0, 0, "final score: " + str(5 * h.experience + 4 * h.gold + 10 * h.hp - h.steps)
+            self.map.stdscr.addstr(0, 0, "final score: " + str(5 * h.xp + 4 * h.gold + 10 * h.hp - h.steps)
                                    + "\n\rTHE END")
             return False
         return True

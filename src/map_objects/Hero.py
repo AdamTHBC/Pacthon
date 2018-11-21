@@ -9,13 +9,13 @@ class Hero(Actor):
     obstacle = False
 
     def __init__(self, x, y):
+        self.max_hp = 3
         super().__init__(x, y)
         self.steps = 0
         self.level = 1
-        self.max_hp = 3
         self.gold = 0
-        self.experience = 0
-        self.experience_factor = 1
+        self.xp = 0
+        self.xp_factor = 1
         self.damage = 1
         self.damage_factor = 1
 
@@ -30,7 +30,7 @@ class Hero(Actor):
     def apply_result(self, result):
         if (result != 0):
             self.change_hp(result.damage_to_actor)
-            self.change_xp(result.experience)
+            self.change_xp(result.xp)
             self.change_gold(result.gold)
 
     def change_gold(self, value):
@@ -56,14 +56,14 @@ class Hero(Actor):
         self.damage += value
 
     def change_xp(self, value):
-        """modify hero's experience using value. check for level up"""
-        self.experience += value * self.experience_factor
+        """modify hero's xp using value. check for level up"""
+        self.xp += value * self.xp_factor
         while (self.level_up()):
             """increase level required number of times"""
 
     def level_up(self):
         """check level up. Return True if level up happened to trigger another check"""
-        if (self.experience >= lvl_chart[self.level]):
+        if (self.xp >= lvl_chart[self.level]):
             self.level += 1
             self.change_max_hp(3)
             self.change_damage(1)
