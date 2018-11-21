@@ -2,7 +2,7 @@ from src.Event_Result import EventResult
 from src.map_objects.Non_Actor import NonActor
 
 
-class Item(NonActor):
+class MapItem(NonActor):
     """ Item that can be picked up.
     sometimes can be used or selled.
     Can be viewed by hero, accessed from inventory.
@@ -10,10 +10,11 @@ class Item(NonActor):
     """
 
     mark = 'I'
-    type_name = 'Item'
+    type_name = 'Map item'
 
     def __init__(self, ItemID, x, y):
         super().__init__(x, y)
+        self.ItemID = ItemID
 
     def collision_result(self):
         return EventResult(self.hp, 0, 1, 1)

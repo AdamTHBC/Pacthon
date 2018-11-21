@@ -23,6 +23,8 @@ class Engine:
             self.spawn('Wall')
         for x in range(amountFood):
             self.spawn('Food')
+        for x in range(amountItem):
+            self.spawn('Map item')
 
     def __del__(self):
         endwin()
@@ -261,6 +263,7 @@ class Engine:
             self.spawn('Monster')
             self.spawn('Wall')
             self.spawn('Food')
+            self.spawn('Map item')
             return
 
     def action_move(self, actor, key):

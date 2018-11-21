@@ -5,10 +5,10 @@ from src.res.Important import max_x, max_y
 class Objects:
     def __init__(self):
         self.l = []
-        self.lists = {'Monster': [], 'Gold': [], 'Wall': [], 'Food': [],
+        self.lists = {'Monster': [], 'Gold': [], 'Wall': [], 'Food': [], 'Map item': [],
                       'StairsUp': StairsUp(1, 1), 'StairsDown': StairsDown(max_x, max_y), 'Sword': Sword(max_x, 1),
                       'Hero': Hero(int(max_x / 2), int(max_y / 2))}
-        self.list_keys = ['Monster', 'Gold', 'Wall', 'Food']
+        self.list_keys = ['Monster', 'Gold', 'Wall', 'Food', 'Map item']
         self.non_lists = ['StairsUp', 'StairsDown', 'Sword', 'Hero']
 
     def check_limit(self):
@@ -60,6 +60,8 @@ class Objects:
             self.lists.get(object_type).append(Wall(x, y))
         elif (object_type == 'Food'):
             self.lists.get(object_type).append(Food(x, y))
+        elif (object_type == 'Map item'):
+            self.lists.get(object_type).append(MapItem(1, x, y))
 
     def remove_object(self, removed_object):
         """removes given object"""

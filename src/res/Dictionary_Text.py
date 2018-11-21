@@ -1,6 +1,6 @@
 look_message = {
     'any object': "default",
-    'Item': "It's a nice item! Pick it up",
+    'Map item': "Item laying around... may be useful!",
     'Monster': "It's a scary monster! Attack with [i j k l]",
     'Gold': "It's a shiny gold! Pick it up",
     'Wall': "It's a wall! Maybe it can break..?",
@@ -13,6 +13,7 @@ look_message = {
 
 defeat_message = {
     'any object': "default.",
+    'Map item': ":(",
     'Monster': "Gaah!",
     'Gold': ":(",
     'Wall': "It hurt!",
@@ -25,6 +26,7 @@ defeat_message = {
 
 attack_message = {
     'any object': "default. ",
+    'Map item': "Don't attack item :( ",
     'Monster': "Grr! ",
     'Gold': "Don't attack gold :( ",
     'Wall': "It's falling on you! ",
@@ -37,6 +39,7 @@ attack_message = {
 
 collision_message = {
     'any object': "default",
+    'Map item': "Item picked up!",
     'Monster': "Ouch!",
     'Gold': "Oh yeah!",
     'Wall': "Bump!",
