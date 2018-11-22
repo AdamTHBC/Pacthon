@@ -17,7 +17,7 @@ class MapItem(NonActor):
         self.ItemID = ItemID
 
     def collision_result(self):
-        return EventResult(self.hp, 0, 1, 1)
+        return EventResult(0)
         # but also spawn item in hero inventory
 
     def attack_result(self, damage):

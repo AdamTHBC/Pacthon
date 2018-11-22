@@ -67,3 +67,9 @@ class Inventory():
         self.EqSlots[slot] = item
         self.InventoryRemove(item)
         return 0
+
+    def view(self, stream):
+        j = 15
+        for i in self.ItemList:
+            stream.addstr(j, 0, i.name)
+            j += 1

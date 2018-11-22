@@ -39,15 +39,18 @@ class Objects:
 
         return False
 
-    def get_object(self, x, y):
-        """returns object at given coords or None if empty"""
+    def get_object(self, x, y, blacklist=None):
+        """
+        returns object at given coords or None if empty
+        blacklist allows ignoring some objects (type_name)
+        """
         for i in self.list_keys:
             for j in self.lists.get(i):
-                if (j.x == x and j.y == y):
+                if (j.x == x and j.y == y and j.type_name != blacklist):
                     return j
         for i in self.non_lists:
             j = self.lists.get(i)
-            if (j.x == x and j.y == y):
+            if (j.x == x and j.y == y and j.type_name != blacklist):
                 return j
         return None
 

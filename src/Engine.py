@@ -2,6 +2,7 @@ import random
 
 from unicurses import *
 
+from src.Inventory_Item import InventoryItem
 from src.Map import Map
 from src.res import *
 
@@ -133,10 +134,35 @@ class Engine:
         "create object otherwise"
         self.map.objects.create_object(object_type, new_x, new_y)
 
+    def pick_up(self, actor):
+        """
+        pick up an object lying by actor's feet
+        :return: 0 - ok. 1 - not item. 2 - inventory full.
+        """
+        target = self.map.objects.get_object(actor.x, actor.y, actor.type_name)
+
+        "not an item"
+        if (target == None):
+            return 1
+        if (target.type_name != 'Map item'):
+            return 1
+
+        "try putting inside inventory"
+        result = actor.inventory.InventoryAdd(InventoryItem(target.ItemID))
+        if (result == 0):
+            "item added"
+            self.map.objects.remove_object(target)
+
+        actor.inventory.view(self.invscr)
+
+        return result
+
+
     def move(self, actor, key):
         """move an actor in specified direction, return collision result or 0"""
         tmp_x = actor.x
         tmp_y = actor.y
+
         if (key == 65):  # UP
             tmp_y -= 1
         if (key == 66):  # DOWN
@@ -266,11 +292,10 @@ class Engine:
             self.spawn('Map item')
             return
 
-    def action_move(self, actor, key):
-        """result of moving but only if arrow button was pressed"""
-        if (key in move_keys):
-            actor.steps += 1
-            actor.apply_result(self.move(actor, key))
+    def action_pick_up(self, actor, key):
+        """result of looking at objects but only if attack button was pressed"""
+        if (key == ' '):
+            self.pick_up(actor)
 
     def action_look(self, actor, key):
         """result of looking at objects but only if attack button was pressed"""
@@ -281,6 +306,12 @@ class Engine:
         """result of attack but only if attack button was pressed"""
         if (key in attack_keys):
             actor.apply_result(self.attack(actor, key))
+
+    def action_move(self, actor, key):
+        """result of moving but only if arrow button was pressed"""
+        if (key in move_keys):
+            actor.steps += 1
+            actor.apply_result(self.move(actor, key))
 
     def action_saveload(self, actor, key):
         if (key == 'S'):
@@ -331,9 +362,10 @@ class Engine:
             return True
         self.all_erase()
         self.action_spawn(key)
-        self.action_move(actor, ord(key))
+        self.action_pick_up(actor, key)
         self.action_look(actor, key)
         self.action_attack(actor, key)
+        self.action_move(actor, ord(key))
         self.action_saveload(actor, key)
         self.draw()
         is_over = self.check_quit(key)

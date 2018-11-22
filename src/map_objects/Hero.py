@@ -1,3 +1,4 @@
+from src.Inventory import Inventory
 from src.map_objects.Actor import Actor
 from src.res.Important import lvl_chart
 
@@ -18,6 +19,7 @@ class Hero(Actor):
         self.xp_factor = 1
         self.damage = 1
         self.damage_factor = 1
+        self.inventory = Inventory()
 
     def collision_result(self):
         """not really possible"""
@@ -69,3 +71,12 @@ class Hero(Actor):
             self.change_damage(1)
             return True
         return False
+
+    ### inventory options ###
+
+    def view_inventory(self):
+        """
+        view this actor's inventory,
+        i.e. complete item list,
+        equipment on slots
+        """
