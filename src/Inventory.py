@@ -49,26 +49,23 @@ class Inventory():
         "item not found"
         return 1
 
-    def equip(self, item, slot):
+    def equip(self, item):
         """
         Equip item to slot
         change in bonuses applied by actor in major function
 
         :param item: item to equip. Success only with Equipment type
-        :param slot: slot to wear the item. If not empty, put item to inventory
-        :return: 0 - ok. 1 - not equipment. 2 - wrong slot.
+        :return: 0 - ok. 1 - not equipment.
         """
-        if (item.slot == None):
+        if (item.slot not in self.EqSlots.keys()):
             "not an equipment"
             return 1
-        if (item.slot != slot):
-            "wrong slot"
-            return 2
-        if (self.EqSlots.get(slot) != None):
+
+        if (self.EqSlots.get(item.slot) != None):
             "wasn't empty"
-            self.InventoryAdd(self.EqSlots.get(slot))
+            self.InventoryAdd(self.EqSlots.get(item.slot))
         "ok, equip and remove from list"
-        self.EqSlots[slot] = item
+        self.EqSlots[item.slot] = item
         self.InventoryRemove(item)
         return 0
 
@@ -91,14 +88,11 @@ class Inventory():
             self.position = 0
 
     def use_item(self, actor):
-        if self.position < self.ItemList.__len__():
-            """use"""
-            self.ItemList[self.position].give_bonus(actor)
-            self.ItemList.pop(self.position)
+        self.ItemList[self.position].give_bonus(actor)
+        self.ItemList.pop(self.position)
 
     def view_item(self, stream):
-        if self.position < self.ItemList.__len__():
-            self.ItemList[self.position].view(stream)
+        self.ItemList[self.position].view(stream)
         stream.erase()
 
     def action(self, key, stream, actor):
@@ -107,10 +101,12 @@ class Inventory():
             return True
         if (ord(key) in [65, 66]):
             self.move(ord(key))
-        if (key == 'u'):
+        if (self.position < self.ItemList.__len__() and key == 'u'):
             self.use_item(actor)
-        if (key == 'v'):
+        if (self.position < self.ItemList.__len__() and key == 'v'):
             self.view_item(stream)
+        if (self.position < self.ItemList.__len__() and key == 'e'):
+            self.equip(self.ItemList[self.position])
         self.draw(stream)
 
         if (key == 'q'):
@@ -125,6 +121,7 @@ class Inventory():
         key = stream.getkey()
         while self.action(key, stream, actor):
             key = stream.getkey()
+        stream.erase()
 
     def draw(self, stream):
         for i in range(1, self.InventorySize + 1):
@@ -136,5 +133,41 @@ class Inventory():
         for i in self.ItemList:
             stream.addstr(j, 6, i.name)
             j += 1
+        self.draw_eq(stream)
 
         stream.refresh()
+
+    def draw_eq(self, stream):
+        """
+
+        :param stream:
+        :return:
+        """
+
+        # head
+        stream.addstr(self.InventorySize + 1, 7, """
+            Head
+            _____
+           |     |
+           |     |
+           |_____|
+  Right                Left
+  _____               _____
+ |     |             |     |
+ |     |             |     |
+ |_____|             |_____|
+            Torso
+            _____
+           |     |
+           |     |
+           |_____|
+        """)
+        if (self.EqSlots.get("head") != None):
+            stream.addstr(self.InventorySize + 5, 12, self.EqSlots.get("head").graphics)
+        if (self.EqSlots.get("right") != None):
+            stream.addstr(self.InventorySize + 10, 2, self.EqSlots.get("right").graphics)
+        if (self.EqSlots.get("left") != None):
+            stream.addstr(self.InventorySize + 10, 22, self.EqSlots.get("left").graphics)
+        if (self.EqSlots.get("torso") != None):
+            stream.addstr(self.InventorySize + 15, 12, self.EqSlots.get("torso").graphics)
+        # torso

@@ -15,6 +15,7 @@ class InventoryItem():
         self.price = 2
         self.effect_type = "boost"
         self.effect = ("hp", 2, 0)
+        self.slot = None
 
     def give_bonus(self, actor):
         if (self.effect_type == "boost"):
