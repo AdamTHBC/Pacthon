@@ -107,7 +107,8 @@ class Engine:
         arrows - move
         """ + look_keys + """ - look
         """ + attack_keys + """  - attack
-        [S]ave [L]oad [q]uit
+        [S]ave [L]oad [I]nventory
+        [q]uit
         any button - Start
         """)
 
@@ -152,8 +153,6 @@ class Engine:
         if (result == 0):
             "item added"
             self.map.objects.remove_object(target)
-
-        actor.inventory.view(self.invscr)
 
         return result
 
@@ -313,6 +312,12 @@ class Engine:
             actor.steps += 1
             actor.apply_result(self.move(actor, key))
 
+    def action_inventory(self, actor, key):
+        if (key == 'I'):
+            self.all_erase()
+            actor.inventory.view(self.invscr, actor)
+            self.draw()
+
     def action_saveload(self, actor, key):
         if (key == 'S'):
             prompt = "Save Game menu. Give savefile name."
@@ -366,8 +371,9 @@ class Engine:
         self.action_look(actor, key)
         self.action_attack(actor, key)
         self.action_move(actor, ord(key))
+        self.action_inventory(actor, key)
         self.action_saveload(actor, key)
         self.draw()
-        is_over = self.check_quit(key)
+
         "depending on result - continue, game over OR (TBD) next level"
-        return is_over
+        return self.check_quit(key)

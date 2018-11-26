@@ -1,3 +1,6 @@
+from src.res.Important import ignore_keys
+
+
 class Inventory():
     """
     class for inventory.
@@ -10,6 +13,7 @@ class Inventory():
     def __init__(self):
         #   self.inventory_screen
         self.InventorySize = 8
+        self.position = 0
         self.ItemList = []
         self.EqSlots = {
             'head': None,
@@ -68,8 +72,69 @@ class Inventory():
         self.InventoryRemove(item)
         return 0
 
-    def view(self, stream):
-        j = 15
+    def show_help(self, stdscr):
+        stdscr.addstr(0, 0, """
+        UP / DOWN - select
+        u - use
+        v - view
+        q - quit
+        """)
+
+    def move(self, direction):
+        if (direction == 65):
+            self.position -= 1
+        elif (direction == 66):
+            self.position += 1
+        if (self.position < 0):
+            self.position = self.InventorySize - 1
+        elif (self.position >= self.InventorySize):
+            self.position = 0
+
+    def use_item(self, actor):
+        if self.position < self.ItemList.__len__():
+            """use"""
+            self.ItemList[self.position].give_bonus(actor)
+            self.ItemList.pop(self.position)
+
+    def view_item(self, stream):
+        if self.position < self.ItemList.__len__():
+            self.ItemList[self.position].view(stream)
+        stream.erase()
+
+    def action(self, key, stream, actor):
+        stream.erase()
+        if (ord(key) in ignore_keys):
+            return True
+        if (ord(key) in [65, 66]):
+            self.move(ord(key))
+        if (key == 'u'):
+            self.use_item(actor)
+        if (key == 'v'):
+            self.view_item(stream)
+        self.draw(stream)
+
+        if (key == 'q'):
+            return False
+        return True
+
+    def view(self, stream, actor):
+        self.show_help(stream)
+        stream.getkey()
+        stream.erase()
+        self.draw(stream)
+        key = stream.getkey()
+        while self.action(key, stream, actor):
+            key = stream.getkey()
+
+    def draw(self, stream):
+        for i in range(1, self.InventorySize + 1):
+            if (i - 1 == self.position):
+                stream.addstr(i, 1, '*')
+            stream.addstr(i, 3, str(i))
+
+        j = 1
         for i in self.ItemList:
-            stream.addstr(j, 0, i.name)
+            stream.addstr(j, 6, i.name)
             j += 1
+
+        stream.refresh()

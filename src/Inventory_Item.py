@@ -16,6 +16,16 @@ class InventoryItem():
         self.effect_type = "boost"
         self.effect = ("hp", 2, 0)
 
+    def give_bonus(self, actor):
+        if (self.effect_type == "boost"):
+            if (self.effect[0] == "gold"):
+                actor.change_gold(self.effect[1])
+            if (self.effect[0] == "max_hp"):
+                actor.change_max_hp(self.effect[1])
+            if (self.effect[0] == "hp"):
+                actor.change_hp(self.effect[1])
+            if (self.effect[0] == "damage"):
+                actor.change_damage(self.effect[1])
 
     def view(self, item_screen):
         item_screen.erase()

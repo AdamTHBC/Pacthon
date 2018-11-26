@@ -39,7 +39,7 @@ attack_message = {
 
 collision_message = {
     'any object': "default",
-    'Map item': "Item picked up!",
+    'Map item': "Item! Pick it up with [Space]!",
     'Monster': "Ouch!",
     'Gold': "Oh yeah!",
     'Wall': "Bump!",
