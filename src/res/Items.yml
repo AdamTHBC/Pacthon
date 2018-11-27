@@ -37,7 +37,7 @@ gem_1:
   name: "Pearl"
   graphics: "((* )"
   description: "A beautiful pearl without practical use."
-  price: 10
+  price: 20
   effect_type: "boost"
   effect_params:
     area: "gold"
@@ -48,7 +48,7 @@ gem_2:
   name: "Diamond"
   graphics: "[\\|/]"
   description: "A beautiful diamond without practical use."
-  price: 15
+  price: 30
   effect_type: "boost"
   effect_params:
     area: "gold"
@@ -80,34 +80,88 @@ spyglass:
 armor_1:
   name: "Leather armor"
   graphics: "[.v.]"
-  description: "A handy spyglass out of steel. Allows watching places far, far away."
-  price: 5
-  effect_type: "Other"
+  description: "An armor made from hardened leather, makes you more likely to survive a battle."
+  price: 10
+  effect_type: "equipment"
   effect_params:
-    area: None
-    value: None
-    duration: None
+    area: "max_hp"
+    value: 1
+    duration: 0
   slot: "torso"
 armor_2:
-  name: "Heavy armor"
+  name: "Plate armor"
   graphics: "\\\\x//"
-  description: "A handy spyglass out of steel. Allows watching places far, far away."
-  price: 5
-  effect_type: "Other"
+  description: "A plate iron that seems impossible to bend. Gives a good protection."
+  price: 25
+  effect_type: "equipment"
   effect_params:
-    area: None
-    value: None
-    duration: None
+    area: "max_hp"
+    value: 3
+    duration: 0
   slot: "torso"
-
-
-
-########### equipment ###########
-#  'armor1': "",
-#  'armor2': "",
-#  'sword1': "",
-#  'sword2': "",
-#  'helmet1': "",
-#  'helmet2': "",
-#  'shield1': "",
-#  'shield2': ""
+sword_1:
+  name: "Short sword"
+  graphics: "=(---"
+  description: "A short sword that can easily cut unarmored opponent."
+  price: 5
+  effect_type: "equipment"
+  effect_params:
+    area: "damage"
+    value: 1
+    duration: 0
+  slot: "right"
+sword_2:
+  name: "Long sword"
+  graphics: "-[==-"
+  description: "A long sword capable of delivering powerful attacks."
+  price: 15
+  effect_type: "equipment"
+  effect_params:
+    area: "damage"
+    value: 2
+    duration: 0
+  slot: "right"
+helmet_1:
+  name: "Iron helmet"
+  graphics: "/]o[\\"
+  description: "A solid helmet that may save your life."
+  price: 5
+  effect_type: "equipment"
+  effect_params:
+    area: "max_hp"
+    value: 1
+    duration: 0
+  slot: "head"
+helmet_2:
+  name: "Cowboy hat"
+  graphics: "_:=:_"
+  description: "The coolest hat in the game. Imported goods."
+  price: 100
+  effect_type: "equipment"
+  effect_params:
+    area: "max_hp"
+    value: 2
+    duration: 0
+  slot: "head"
+shield_1:
+  name: "Small shield"
+  graphics: "((o))"
+  description: "A small, easy to use shield."
+  price: 5
+  effect_type: "equipment"
+  effect_params:
+    area: "max_hp"
+    value: 1
+    duration: 0
+  slot: "left"
+shield_1:
+  name: "Large shield"
+  graphics: "|[o]|"
+  description: "A shield covering large part of your body. Looks useful."
+  price: 10
+  effect_type: "equipment"
+  effect_params:
+    area: "max_hp"
+    value: 2
+    duration: 0
+  slot: "left"

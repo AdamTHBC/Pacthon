@@ -26,15 +26,24 @@ class InventoryItem():
         self.slot = item_list.get(ItemID).get('slot')
 
     def give_bonus(self, actor):
-        if (self.effect_type == "boost"):
-            if (self.effect.get('area') == "gold"):
-                actor.change_gold(self.effect.get('value'))
-            if (self.effect.get('area') == "max_hp"):
-                actor.change_max_hp(self.effect.get('value'))
-            if (self.effect.get('area') == "hp"):
-                actor.change_hp(self.effect.get('value'))
-            if (self.effect.get('area') == "damage"):
-                actor.change_damage(self.effect.get('value'))
+        if (self.effect.get('area') == "gold"):
+            actor.change_gold(self.effect.get('value'))
+        if (self.effect.get('area') == "max_hp"):
+            actor.change_max_hp(self.effect.get('value'))
+        if (self.effect.get('area') == "hp"):
+            actor.change_hp(self.effect.get('value'))
+        if (self.effect.get('area') == "damage"):
+            actor.change_damage(self.effect.get('value'))
+
+    def remove_bonus(self, actor):
+        if (self.effect.get('area') == "gold"):
+            actor.change_gold(-1 * self.effect.get('value'))
+        if (self.effect.get('area') == "max_hp"):
+            actor.change_max_hp(-1 * self.effect.get('value'))
+        if (self.effect.get('area') == "hp"):
+            actor.change_hp(-1 * self.effect.get('value'))
+        if (self.effect.get('area') == "damage"):
+            actor.change_damage(-1 * self.effect.get('value'))
 
     def view(self, item_screen):
         item_screen.erase()

@@ -9,10 +9,10 @@ move_keys = [65, 66, 67, 68]
 look_keys = "wasd"
 attack_keys = "ijkl"
 
-amountItem = 10
+amountItem = 20
 amountGold = 5
 amountMonster = 10
-amountWall = 5
+amountWall = 10
 amountFood = 5
 
 # not used yet

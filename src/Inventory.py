@@ -49,24 +49,31 @@ class Inventory():
         "item not found"
         return 1
 
-    def equip(self, item):
+    def equip(self, item, actor):
         """
         Equip item to slot
         change in bonuses applied by actor in major function
 
         :param item: item to equip. Success only with Equipment type
+        :param actor: actpr equipping. Will be solved better
         :return: 0 - ok. 1 - not equipment.
         """
         if (item.slot not in self.EqSlots.keys()):
             "not an equipment"
             return 1
 
-        if (self.EqSlots.get(item.slot) != None):
-            "wasn't empty"
-            self.InventoryAdd(self.EqSlots.get(item.slot))
+        old_item = self.EqSlots.get(item.slot)
+
         "ok, equip and remove from list"
         self.EqSlots[item.slot] = item
         self.InventoryRemove(item)
+        item.give_bonus(actor)
+
+        if (old_item != None):
+            "wasn't empty"
+            # remove (any) old equipment bonus
+            old_item.remove_bonus(actor)
+            self.InventoryAdd(old_item)
         return 0
 
     def show_help(self, stdscr):
@@ -74,6 +81,7 @@ class Inventory():
         UP / DOWN - select
         u - use
         v - view
+        d - destroy
         q - quit
         """)
 
@@ -88,8 +96,12 @@ class Inventory():
             self.position = 0
 
     def use_item(self, actor):
-        self.ItemList[self.position].give_bonus(actor)
-        self.ItemList.pop(self.position)
+        if (self.ItemList[self.position].effect_type == "boost"):
+            self.ItemList[self.position].give_bonus(actor)
+            self.ItemList.pop(self.position)
+
+    def destroy(self):
+        self.ItemList.remove(self.ItemList[self.position])
 
     def view_item(self, stream):
         self.ItemList[self.position].view(stream)
@@ -106,7 +118,9 @@ class Inventory():
         if (self.position < self.ItemList.__len__() and key == 'v'):
             self.view_item(stream)
         if (self.position < self.ItemList.__len__() and key == 'e'):
-            self.equip(self.ItemList[self.position])
+            self.equip(self.ItemList[self.position], actor)
+        if (self.position < self.ItemList.__len__() and key == 'd'):
+            self.destroy()
         self.draw(stream)
 
         if (key == 'q'):
