@@ -1,3 +1,7 @@
+import random
+
+import yaml
+
 from src.map_objects import *
 from src.res.Important import max_x, max_y
 
@@ -10,6 +14,11 @@ class Objects:
                       'Hero': Hero(int(max_x / 2), int(max_y / 2))}
         self.list_keys = ['Monster', 'Gold', 'Wall', 'Food', 'Map item']
         self.non_lists = ['StairsUp', 'StairsDown', 'Sword', 'Hero']
+
+        # TODO uniwersalna ścieżka
+        file = open('src/res/Items.yml', 'r')
+        self.item_keys = list(yaml.load(file).keys())
+        file.close()
 
     def check_limit(self):
         object_count = len(self.non_lists)
@@ -64,7 +73,8 @@ class Objects:
         elif (object_type == 'Food'):
             self.lists.get(object_type).append(Food(x, y))
         elif (object_type == 'Map item'):
-            self.lists.get(object_type).append(MapItem(1, x, y))
+            new_id = self.item_keys[random.randint(0, len(self.item_keys) - 1)]
+            self.lists.get(object_type).append(MapItem(new_id, x, y))
 
     def remove_object(self, removed_object):
         """removes given object"""

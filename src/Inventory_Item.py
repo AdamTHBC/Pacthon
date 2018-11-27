@@ -1,3 +1,11 @@
+import yaml
+
+# TODO uniwersalna ścieżka
+file = open('src/res/Items.yml', 'r')
+item_list = yaml.load(file)
+file.close()
+
+
 class InventoryItem():
     """Item in inventory of an actor
     sometimes can be used or sold.
@@ -9,24 +17,24 @@ class InventoryItem():
     """
 
     def __init__(self, ItemID):
-        self.name = "Healing Potion"
-        self.graphics = "( H )"
-        self.description = "A red, glowing healing potion. Drinking it restores 2 HP."
-        self.price = 2
-        self.effect_type = "boost"
-        self.effect = ("hp", 2, 0)
-        self.slot = None
+        self.name = item_list.get(ItemID).get('name')
+        self.graphics = item_list.get(ItemID).get('graphics')
+        self.description = item_list.get(ItemID).get('description')
+        self.price = item_list.get(ItemID).get('price')
+        self.effect_type = item_list.get(ItemID).get('effect_type')
+        self.effect = item_list.get(ItemID).get('effect_params')
+        self.slot = item_list.get(ItemID).get('slot')
 
     def give_bonus(self, actor):
         if (self.effect_type == "boost"):
-            if (self.effect[0] == "gold"):
-                actor.change_gold(self.effect[1])
-            if (self.effect[0] == "max_hp"):
-                actor.change_max_hp(self.effect[1])
-            if (self.effect[0] == "hp"):
-                actor.change_hp(self.effect[1])
-            if (self.effect[0] == "damage"):
-                actor.change_damage(self.effect[1])
+            if (self.effect.get('area') == "gold"):
+                actor.change_gold(self.effect.get('value'))
+            if (self.effect.get('area') == "max_hp"):
+                actor.change_max_hp(self.effect.get('value'))
+            if (self.effect.get('area') == "hp"):
+                actor.change_hp(self.effect.get('value'))
+            if (self.effect.get('area') == "damage"):
+                actor.change_damage(self.effect.get('value'))
 
     def view(self, item_screen):
         item_screen.erase()

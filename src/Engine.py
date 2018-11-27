@@ -274,7 +274,7 @@ class Engine:
     ########################### control ############################
 
     def game_start(self):
-        #        show_animation(self.map.stdscr)
+        show_animation(self.map.stdscr)
         self.show_help()
         """clean unused keys"""
         while (self.map.stdscr.getch() in ignore_keys):

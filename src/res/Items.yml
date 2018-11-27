@@ -1,4 +1,6 @@
-- id: 'potion_hp_1'
+# dictionary of inventory items (dictionaries)
+
+potion_hp_1:
   name: "Healing Potion"
   graphics: "( H )"
   description: "A red, glowing healing potion. Drinking it restores 2 HP."
@@ -8,7 +10,8 @@
     area: "hp"
     value: 2
     duration: 0
-- id: 'potion_dmg_1'
+  slot: None
+potion_dmg_1:
   name: "Strength Potion"
   graphics: "( S )"
   description: "A black, hot strength potion. Drinking ir increases damage by 1 for 10 steps."
@@ -18,7 +21,8 @@
     area: "damage"
     value: 1
     duration: 10
-- id: 'potion_stt_1'
+  slot: None
+potion_stt_1:
   name: "Antidote"
   graphics: "( A )"
   description: "A milky, light antidote. Restores your status to normal."
@@ -28,27 +32,30 @@
     area: "status"
     value: -100
     duration: 0
-- id: 'gem_1'
+  slot: None
+gem_1:
   name: "Pearl"
   graphics: "((* )"
   description: "A beautiful pearl without practical use."
   price: 10
-  effect_type: None
+  effect_type: "boost"
   effect_params:
-    area: None
-    value: None
+    area: "gold"
+    value: 10
     duration: None
-- id: 'gem_2'
+  slot: None
+gem_2:
   name: "Diamond"
-  graphics: "[\|/]"
+  graphics: "[\\|/]"
   description: "A beautiful diamond without practical use."
   price: 15
-  effect_type: None
+  effect_type: "boost"
   effect_params:
-    area: None
-    value: None
+    area: "gold"
+    value: 15
     duration: None
-- id: 'map'
+  slot: None
+map:
   name: "World Map"
   graphics: "/=x=/"
   description: "A map of the known world, priceless during longer trips."
@@ -58,7 +65,8 @@
     area: None
     value: None
     duration: None
-- id: 'spyglass'
+  slot: None
+spyglass:
   name: "Spyglass"
   graphics: "-==<)"
   description: "A handy spyglass out of steel. Allows watching places far, far away."
@@ -68,15 +76,38 @@
     area: None
     value: None
     duration: None
+  slot: None
+armor_1:
+  name: "Leather armor"
+  graphics: "[.v.]"
+  description: "A handy spyglass out of steel. Allows watching places far, far away."
+  price: 5
+  effect_type: "Other"
+  effect_params:
+    area: None
+    value: None
+    duration: None
+  slot: "torso"
+armor_2:
+  name: "Heavy armor"
+  graphics: "\\\\x//"
+  description: "A handy spyglass out of steel. Allows watching places far, far away."
+  price: 5
+  effect_type: "Other"
+  effect_params:
+    area: None
+    value: None
+    duration: None
+  slot: "torso"
 
-  """
+
+
 ########### equipment ###########
-    'armor1': "",
-    'armor2': "",
-    'sword1': "",
-    'sword2': "",
-    'helmet1': "",
-    'helmet2': "",
-    'shield1': "",
-    'shield2': ""
-"""
+#  'armor1': "",
+#  'armor2': "",
+#  'sword1': "",
+#  'sword2': "",
+#  'helmet1': "",
+#  'helmet2': "",
+#  'shield1': "",
+#  'shield2': ""

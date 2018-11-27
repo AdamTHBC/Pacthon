@@ -133,41 +133,41 @@ class Inventory():
         for i in self.ItemList:
             stream.addstr(j, 6, i.name)
             j += 1
-        self.draw_eq(stream)
+        for dict_key in self.EqSlots.keys():
+            self.draw_slot(stream, dict_key)
 
         stream.refresh()
 
-    def draw_eq(self, stream):
+    def draw_slot(self, stream, slot):
         """
 
         :param stream:
+        :param slot:
         :return:
         """
+        # get parameters for given slot
+        if (slot == "head"):
+            row = 0
+            column = 1
+        elif (slot == "right"):
+            row = 1
+            column = 0
+        elif (slot == "left"):
+            row = 1
+            column = 2
+        elif (slot == "torso"):
+            row = 2
+            column = 1
+        else:
+            row = 0
+            column = 0
 
-        # head
-        stream.addstr(self.InventorySize + 1, 7, """
-            Head
-            _____
-           |     |
-           |     |
-           |_____|
-  Right                Left
-  _____               _____
- |     |             |     |
- |     |             |     |
- |_____|             |_____|
-            Torso
-            _____
-           |     |
-           |     |
-           |_____|
-        """)
-        if (self.EqSlots.get("head") != None):
-            stream.addstr(self.InventorySize + 5, 12, self.EqSlots.get("head").graphics)
-        if (self.EqSlots.get("right") != None):
-            stream.addstr(self.InventorySize + 10, 2, self.EqSlots.get("right").graphics)
-        if (self.EqSlots.get("left") != None):
-            stream.addstr(self.InventorySize + 10, 22, self.EqSlots.get("left").graphics)
-        if (self.EqSlots.get("torso") != None):
-            stream.addstr(self.InventorySize + 15, 12, self.EqSlots.get("torso").graphics)
-        # torso
+        x = 8 * column + 30
+        y = 5 * row + 1
+        stream.addstr(y, x + 1, slot)
+        stream.addstr(y + 1, x, " _____ ")
+        stream.addstr(y + 2, x, "|     |")
+        stream.addstr(y + 3, x, "|     |")
+        stream.addstr(y + 4, x, "|_____|")
+        if (self.EqSlots.get(slot) != None):
+            stream.addstr(y + 3, x + 1, self.EqSlots.get(slot).graphics)
