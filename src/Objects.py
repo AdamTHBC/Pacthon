@@ -10,10 +10,10 @@ class Objects:
     def __init__(self):
         self.l = []
         self.lists = {'Monster': [], 'Gold': [], 'Wall': [], 'Food': [], 'Map item': [],
-                      'StairsUp': StairsUp(1, 1), 'StairsDown': StairsDown(max_x, max_y), 'Sword': Sword(max_x, 1),
+                      'StairsUp': StairsUp(1, 1), 'StairsDown': StairsDown(max_x, max_y),
                       'Hero': Hero(int(max_x / 2), int(max_y / 2))}
         self.list_keys = ['Monster', 'Gold', 'Wall', 'Food', 'Map item']
-        self.non_lists = ['StairsUp', 'StairsDown', 'Sword', 'Hero']
+        self.non_lists = ['StairsUp', 'StairsDown', 'Hero']
 
         # TODO uniwersalna ścieżka
         file = open('src/res/Items.yml', 'r')

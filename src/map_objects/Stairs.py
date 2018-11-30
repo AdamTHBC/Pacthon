@@ -1,32 +1,30 @@
-from src.Event_Result import EventResult
 from src.map_objects.Non_Actor import NonActor
 
 
 class StairsUp(NonActor):
+    """
+    Allows going to the previous level, closer to the exit, less dangerous.
+
+    """
     mark = 'O'
     type_name = 'StairsUp'
     obstacle = True
 
-    def __init__(self, x, y):
-        super().__init__(x, y)
-
-    def collision_result(self):
-        return EventResult()
-
-    def attack_result(self, damage):
-        return EventResult()
+    def return_level(self):
+        """
+        Loads previous level, refilling it with monsters and treasures at random.
+        """
 
 
 class StairsDown(NonActor):
+    """
+    Allows going to the next level, farther from the exit, more dangerous.
+    """
     mark = 'X'
     type_name = 'StairsDown'
     obstacle = True
 
-    def __init__(self, x, y):
-        super().__init__(x, y)
-
-    def collision_result(self):
-        return EventResult()
-
-    def attack_result(self, damage):
-        return EventResult()
+    def progress_level(self):
+        """
+        Creates next level, filling it with monsters and treasures at random.
+        """

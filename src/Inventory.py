@@ -22,7 +22,7 @@ class Inventory():
             'torso': None
         }
 
-    def InventoryAdd(self, item):
+    def inventory_add(self, item):
         """
         Add item to inventory
 
@@ -35,7 +35,7 @@ class Inventory():
         self.ItemList.append(item)
         return 0
 
-    def InventoryRemove(self, item):
+    def inventory_remove(self, item):
         """
         Remove item from inventory.
         Can be used for unequipped items only
@@ -66,14 +66,14 @@ class Inventory():
 
         "ok, equip and remove from list"
         self.EqSlots[item.slot] = item
-        self.InventoryRemove(item)
+        self.inventory_remove(item)
         item.give_bonus(actor)
 
         if (old_item != None):
             "wasn't empty"
             # remove (any) old equipment bonus
             old_item.remove_bonus(actor)
-            self.InventoryAdd(old_item)
+            self.inventory_add(old_item)
         return 0
 
     def show_help(self, stdscr):

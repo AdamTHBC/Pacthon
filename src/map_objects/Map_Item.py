@@ -1,4 +1,3 @@
-from src.Event_Result import EventResult
 from src.map_objects.Non_Actor import NonActor
 
 
@@ -16,9 +15,3 @@ class MapItem(NonActor):
         super().__init__(x, y)
         self.ItemID = ItemID
 
-    def collision_result(self):
-        return EventResult(0)
-        # but also spawn item in hero inventory
-
-    def attack_result(self, damage):
-        return EventResult(damage)

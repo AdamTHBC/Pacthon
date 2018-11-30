@@ -7,7 +7,6 @@ look_message = {
     'Food': "Warm and healthy food",
     'StairsUp': "We can return to a safer place!",
     'StairsDown': "We can travel to a cooler place!",
-    'Sword': "It's the lhe legnedary sword. Pick it up for extra damage. ",
     'Hero': "You need a mirror for that"
 }
 
@@ -20,7 +19,6 @@ defeat_message = {
     'Food': ":(((",
     'StairsUp': "Stairs are not impressed.",
     'StairsDown': "Stairs are not impressed.",
-    'Sword': "The legnedary sword was weak after all.",
     'Hero': "You need an evil twin for that."
 }
 
@@ -33,7 +31,6 @@ attack_message = {
     'Food': "Worst idea ever. ",
     'StairsUp': "Stairs are not impressed. ",
     'StairsDown': "Stairs are not impressed. ",
-    'Sword': "The legnedary sword bends! ",
     'Hero': "You need an evil twin for that. "
 }
 
@@ -46,6 +43,5 @@ collision_message = {
     'Food': "Delicious!",
     'StairsUp': "Available only in full version.",
     'StairsDown': "Available only in full version.",
-    'Sword': "The legnedary sword increases your damage. Nice.",
     'Hero': "You need a clone for that."
 }

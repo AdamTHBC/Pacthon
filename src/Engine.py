@@ -87,20 +87,10 @@ class Engine:
 
     def show_inventory(self, actor):
         """"""
-        "TODO - inventory - list of items held by actor"
         self.invscr.erase()
         self.invscr.addstr(0, 0, "| # |    Item name   ")
         self.invscr.addstr(1, 0, "| 1 | Healing Potion ")
         self.invscr.refresh()
-
-        # view item or use item or return?
-
-    def show_item(self, item):
-        """
-        if inventory open
-        if item found
-        """
-        item.view()
 
     def show_help(self):
         self.map.stdscr.addstr(0, 0, """
@@ -149,7 +139,7 @@ class Engine:
             return 1
 
         "try putting inside inventory"
-        result = actor.inventory.InventoryAdd(InventoryItem(target.ItemID))
+        result = actor.inventory.inventory_add(InventoryItem(target.ItemID))
         if (result == 0):
             "item added"
             self.map.objects.remove_object(target)
@@ -189,10 +179,6 @@ class Engine:
         if (target.obstacle == False):
             actor.x = tmp_x
             actor.y = tmp_y
-
-        # TODO remake for new Item mechanism
-        if (target.artifact):
-            self.stat_increase(actor, target.artifact_boost())
 
         if (target.hp <= 0):
             self.map.objects.remove_object(target)
@@ -251,25 +237,6 @@ class Engine:
             self.show_message(actor, message + battle_log)
 
             return 0
-
-    def stat_increase(self, lucky_guy, artifact_boost):
-        stat = artifact_boost[0]
-        value = artifact_boost[1]
-        if (stat == 'damage'):
-            lucky_guy.change_damage(value)
-        if (stat == 'max_hp'):
-            lucky_guy.change_max_hp(value)
-        if (stat == 'hp'):
-            lucky_guy.change_hp(value)
-
-    def use_item(self, actor, item):
-        if (item.effect_type == None):
-            "nothing happened"
-        elif (item.effect_type == 'boost'):
-            self.stat_increase(actor, (item.area, item.value))
-            # remove item
-        elif (item.effect_type == 'action'):
-            "this I don't know"
 
     ########################### control ############################
 
