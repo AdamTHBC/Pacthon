@@ -4,6 +4,8 @@ from unicurses import *
 
 from src.Inventory_Item import InventoryItem
 from src.Map import Map
+from src.map_objects.Actor import Actor
+from src.map_objects.Map_Item import MapItem
 from src.res import *
 
 
@@ -57,7 +59,7 @@ class Engine:
         self.all_refresh()
 
     def show_stats(self):
-        hero = self.map.objects.lists.get('Hero')
+        hero = self.map.objects.singulars.get('Hero')
         self.sttscr.addstr(1, max_x + 5, "LV " + str(hero.level))
         self.sttscr.addstr(2, max_x + 5, "HP " + str(hero.hp))
         self.sttscr.addstr(3, max_x + 5, "XP " + str(hero.xp))
@@ -132,16 +134,13 @@ class Engine:
         """
         target = self.map.objects.get_object(actor.x, actor.y, actor.type_name)
 
-        "not an item"
-        if (target == None):
-            return 1
-        if (target.type_name != 'Map item'):
+        if not isinstance(target, MapItem):
             return 1
 
-        "try putting inside inventory"
+        # Try adding to inventory
         result = actor.inventory.inventory_add(InventoryItem(target.ItemID))
         if (result == 0):
-            "item added"
+            # Item added
             self.map.objects.remove_object(target)
 
         return result
@@ -168,7 +167,7 @@ class Engine:
             return 0
 
         "case 2: empty field"
-        if (target == None):
+        if (target is None):
             actor.x = tmp_x
             actor.y = tmp_y
             return 0
@@ -176,7 +175,7 @@ class Engine:
         "case 3: collision - interaction"
         result = target.collision_result()
         target.hp -= result.damage_to_self
-        if (target.obstacle == False):
+        if (not target.obstacle):
             actor.x = tmp_x
             actor.y = tmp_y
 
@@ -201,7 +200,7 @@ class Engine:
         if (key == 'd'):  # LEFT
             look_x += 1
         target = self.map.objects.get_object(look_x, look_y)
-        if (target == None):
+        if (target is None):
             return 0
         message = look_message.get(target.type_name)
         self.show_message(actor, message)
@@ -219,7 +218,7 @@ class Engine:
             attack_x += 1
         target = self.map.objects.get_object(attack_x, attack_y)
 
-        if (target == None):
+        if (target is None):
             return 0
 
         result = target.attack_result(actor.damage * actor.damage_factor)
@@ -250,7 +249,7 @@ class Engine:
         self.draw()
 
     def action_spawn(self, key):
-        if (key == 'n' and debug == True):
+        if (key == 'n' and debug):
             self.spawn('Gold')
             self.spawn('Monster')
             self.spawn('Wall')
@@ -292,9 +291,10 @@ class Engine:
             result = self.show_input(savename)
             self.inpscr.erase()
             if (result == 0):
-                "return to map"
+                # Return to map
+                "?"
             if (result == 1):
-                # sprawdz czy taki plik istnieje a jak tak to zapytaj czy nadpisac
+                # Check if exists, ask to confirm overwrite
                 message = "Game saved!"
                 self.show_message(actor, message)
             if (result == 2):
@@ -306,7 +306,8 @@ class Engine:
             result = self.show_input(savename)
             self.inpscr.erase()
             if (result == 0):
-                "return to map"
+                # Return to map
+                "?"
             if (result == 1):
                 # sprawdz czy taki plik istnieje a jak nie to error
                 message = "Game Loaded!"
@@ -315,11 +316,11 @@ class Engine:
                 self.action_saveload(actor, key)
 
     def check_quit(self, key):
-        h = self.map.objects.lists.get('Hero')
+        hero = self.map.objects.singulars.get('Hero')
         objects_left = self.map.objects.count()
-        if (key == 'q' or h.hp <= 0 or objects_left == 0):
+        if (key == 'q' or hero.hp <= 0 or objects_left == 0):
             self.all_erase()
-            self.map.stdscr.addstr(0, 0, "final score: " + str(5 * h.xp + 4 * h.gold + 10 * h.hp - h.steps)
+            self.map.stdscr.addstr(0, 0, "final score: " + str(5 * hero.xp + 4 * hero.gold + 10 * hero.hp - hero.steps)
                                    + "\n\rTHE END")
             return False
         return True
@@ -328,8 +329,12 @@ class Engine:
         """main function in the game
         given input is put to all main actions and results are redrawn,
         afterwards program is ready for another input.
-        Actor hard-coded to be hero, it shoulds change in the future."""
-        actor = self.map.objects.lists.get('Hero')
+        TODO Actor hard-coded to be hero, it shoulds change in the future, selcted by different option."""
+
+        actor = self.map.objects.singulars.get('Hero')
+        if not isinstance(actor, Actor):
+            raise Exception('command given to a non-actor class!')
+
         if (ord(key) in ignore_keys):
             return True
         self.all_erase()
@@ -342,5 +347,5 @@ class Engine:
         self.action_saveload(actor, key)
         self.draw()
 
-        "depending on result - continue, game over OR (TBD) next level"
+        # Depending on result - continue, game over OR (TBD) next level
         return self.check_quit(key)

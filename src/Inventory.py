@@ -5,13 +5,13 @@ class Inventory():
     """
     class for inventory.
     Used for item management, so has a list of those.
-    Must have it's own window to show the contents.
+    Must have it's own window to show the contents.(?)
 
     Every actor has one, enables equipping actor
     """
 
     def __init__(self):
-        #   self.inventory_screen
+        # self.inventory_screen
         self.InventorySize = 8
         self.position = 0
         self.ItemList = []
@@ -29,8 +29,8 @@ class Inventory():
         :param item: item to add
         :return: 0 - ok. 1 - not item. 2 - inventory full.
         """
-        if (self.ItemList.__len__() >= self.InventorySize):
-            "inventory full"
+        if (len(self.ItemList) >= self.InventorySize):
+            # Inventory full
             return 2
         self.ItemList.append(item)
         return 0
@@ -46,7 +46,7 @@ class Inventory():
         if (item in self.ItemList):
             self.ItemList.remove(item)
             return 0
-        "item not found"
+        # Item not found.
         return 1
 
     def equip(self, item, actor):
@@ -59,19 +59,18 @@ class Inventory():
         :return: 0 - ok. 1 - not equipment.
         """
         if (item.slot not in self.EqSlots.keys()):
-            "not an equipment"
+            # Not an equipment.
             return 1
 
         old_item = self.EqSlots.get(item.slot)
 
-        "ok, equip and remove from list"
+        # Ok, equip and remove from list.
         self.EqSlots[item.slot] = item
         self.inventory_remove(item)
         item.give_bonus(actor)
 
-        if (old_item != None):
-            "wasn't empty"
-            # remove (any) old equipment bonus
+        if (old_item is not None):
+            # Was not empty - remove (any) old equipment bonus and add to inventory
             old_item.remove_bonus(actor)
             self.inventory_add(old_item)
         return 0
@@ -96,7 +95,7 @@ class Inventory():
             self.position = 0
 
     def use_item(self, actor):
-        if (self.ItemList[self.position].effect_type == "boost"):
+        if (self.ItemList[self.position].effect_type == 'boost'):
             self.ItemList[self.position].give_bonus(actor)
             self.ItemList.pop(self.position)
 
@@ -113,13 +112,13 @@ class Inventory():
             return True
         if (ord(key) in [65, 66]):
             self.move(ord(key))
-        if (self.position < self.ItemList.__len__() and key == 'u'):
+        if (self.position < len(self.ItemList) and key == 'u'):
             self.use_item(actor)
-        if (self.position < self.ItemList.__len__() and key == 'v'):
+        if (self.position < len(self.ItemList) and key == 'v'):
             self.view_item(stream)
-        if (self.position < self.ItemList.__len__() and key == 'e'):
+        if (self.position < len(self.ItemList) and key == 'e'):
             self.equip(self.ItemList[self.position], actor)
-        if (self.position < self.ItemList.__len__() and key == 'd'):
+        if (self.position < len(self.ItemList) and key == 'd'):
             self.destroy()
         self.draw(stream)
 
@@ -160,16 +159,16 @@ class Inventory():
         :return:
         """
         # get parameters for given slot
-        if (slot == "head"):
+        if (slot == 'head'):
             row = 0
             column = 1
-        elif (slot == "right"):
+        elif (slot == 'right'):
             row = 1
             column = 0
-        elif (slot == "left"):
+        elif (slot == 'left'):
             row = 1
             column = 2
-        elif (slot == "torso"):
+        elif (slot == 'torso'):
             row = 2
             column = 1
         else:
@@ -179,9 +178,9 @@ class Inventory():
         x = 8 * column + 30
         y = 5 * row + 1
         stream.addstr(y, x + 1, slot)
-        stream.addstr(y + 1, x, " _____ ")
-        stream.addstr(y + 2, x, "|     |")
-        stream.addstr(y + 3, x, "|     |")
-        stream.addstr(y + 4, x, "|_____|")
-        if (self.EqSlots.get(slot) != None):
+        stream.addstr(y + 1, x, ' _____ ')
+        stream.addstr(y + 2, x, '|     |')
+        stream.addstr(y + 3, x, '|     |')
+        stream.addstr(y + 4, x, '|_____|')
+        if (self.EqSlots.get(slot) is not None):
             stream.addstr(y + 3, x + 1, self.EqSlots.get(slot).graphics)
