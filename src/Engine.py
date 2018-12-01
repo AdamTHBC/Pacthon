@@ -28,6 +28,8 @@ class Engine:
             self.spawn('Food')
         for x in range(amountItem):
             self.spawn('Map item')
+        self.current_actor = self.map.objects.singulars.get('Hero')
+
 
     def __del__(self):
         endwin()
@@ -64,9 +66,14 @@ class Engine:
         self.sttscr.addstr(2, max_x + 5, "HP " + str(hero.hp))
         self.sttscr.addstr(3, max_x + 5, "XP " + str(hero.xp))
         self.sttscr.addstr(4, max_x + 5, "G " + str(hero.gold))
+        heroine = self.map.objects.singulars.get('Heroine')
+        self.sttscr.addstr(1, max_x + 15, "LV " + str(heroine.level))
+        self.sttscr.addstr(2, max_x + 15, "HP " + str(heroine.hp))
+        self.sttscr.addstr(3, max_x + 15, "XP " + str(heroine.xp))
+        self.sttscr.addstr(4, max_x + 15, "G " + str(heroine.gold))
 
     def show_message(self, actor, message):
-        if (actor.type_name == 'Hero'):
+        if (actor.type_name in ['Hero', 'Heroine']):
             self.msgscr.addstr(max_y + 2, 0, message)
 
     def show_error(self, message):
@@ -87,15 +94,9 @@ class Engine:
         self.inpscr.addstr(0, 0, message)
         return self.inpscr.getstr()
 
-    def show_inventory(self, actor):
-        """"""
-        self.invscr.erase()
-        self.invscr.addstr(0, 0, "| # |    Item name   ")
-        self.invscr.addstr(1, 0, "| 1 | Healing Potion ")
-        self.invscr.refresh()
-
     def show_help(self):
         self.map.stdscr.addstr(0, 0, """
+        1, 2 - select actor
         arrows - move
         """ + look_keys + """ - look
         """ + attack_keys + """  - attack
@@ -317,10 +318,14 @@ class Engine:
 
     def check_quit(self, key):
         hero = self.map.objects.singulars.get('Hero')
+        heroine = self.map.objects.singulars.get('Heroine')
         objects_left = self.map.objects.count()
-        if (key == 'q' or hero.hp <= 0 or objects_left == 0):
+        if (key == 'q' or hero.hp <= 0 or heroine.hp <= 0 or objects_left == 0):
             self.all_erase()
-            self.map.stdscr.addstr(0, 0, "final score: " + str(5 * hero.xp + 4 * hero.gold + 10 * hero.hp - hero.steps)
+            self.map.stdscr.addstr(0, 0, "final score: "
+                                   + str(5 * hero.xp + 4 * hero.gold + 10 * hero.hp - hero.steps
+                                         + 5 * heroine.xp + 4 * heroine.gold + 10 * heroine.hp - heroine.steps
+                                         )
                                    + "\n\rTHE END")
             return False
         return True
@@ -331,20 +336,26 @@ class Engine:
         afterwards program is ready for another input.
         TODO Actor hard-coded to be hero, it shoulds change in the future, selcted by different option."""
 
-        actor = self.map.objects.singulars.get('Hero')
-        if not isinstance(actor, Actor):
+        if key == '1':
+            self.current_actor = self.map.objects.singulars.get('Hero')
+            return True
+        if key == '2':
+            self.current_actor = self.map.objects.singulars.get('Heroine')
+            return True
+
+        if not isinstance(self.current_actor, Actor):
             raise Exception('command given to a non-actor class!')
 
         if (ord(key) in ignore_keys):
             return True
         self.all_erase()
         self.action_spawn(key)
-        self.action_pick_up(actor, key)
-        self.action_look(actor, key)
-        self.action_attack(actor, key)
-        self.action_move(actor, ord(key))
-        self.action_inventory(actor, key)
-        self.action_saveload(actor, key)
+        self.action_pick_up(self.current_actor, key)
+        self.action_look(self.current_actor, key)
+        self.action_attack(self.current_actor, key)
+        self.action_move(self.current_actor, ord(key))
+        self.action_inventory(self.current_actor, key)
+        self.action_saveload(self.current_actor, key)
         self.draw()
 
         # Depending on result - continue, game over OR (TBD) next level

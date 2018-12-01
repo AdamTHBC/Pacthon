@@ -13,7 +13,9 @@ class Objects:
         self.lists = {'Monster': [], 'Gold': [], 'Wall': [], 'Food': [], 'Map item': []}
 
         self.singulars = {'StairsUp': StairsUp(1, 1), 'StairsDown': StairsDown(max_x, max_y),
-                          'Hero': Hero(int(max_x / 2), int(max_y / 2))}
+                          'Hero': Hero(int(max_x / 2), int(max_y / 2)),
+                          'Heroine': Heroine(int(max_x / 2) + 1, int(max_y / 2))
+                          }
 
         absolute_path = os.path.abspath(os.path.dirname(__file__))
         items_path = os.path.join(absolute_path, 'res/Items.yml')

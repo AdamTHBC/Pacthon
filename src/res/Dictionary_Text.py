@@ -7,7 +7,8 @@ look_message = {
     'Food': "Warm and healthy food",
     'StairsUp': "We can return to a safer place!",
     'StairsDown': "We can travel to a cooler place!",
-    'Hero': "You need a mirror for that"
+    'Hero': "A little scary, but cool",
+    'Heroine': "Look no further"
 }
 
 defeat_message = {
@@ -19,7 +20,8 @@ defeat_message = {
     'Food': ":(((",
     'StairsUp': "Stairs are not impressed.",
     'StairsDown': "Stairs are not impressed.",
-    'Hero': "You need an evil twin for that."
+    'Hero': "Well that was not a good idea.",
+    'Heroine': "She was too good for you."
 }
 
 attack_message = {
@@ -31,7 +33,8 @@ attack_message = {
     'Food': "Worst idea ever. ",
     'StairsUp': "Stairs are not impressed. ",
     'StairsDown': "Stairs are not impressed. ",
-    'Hero': "You need an evil twin for that. "
+    'Hero': "No, stop, you should keep him alive. ",
+    'Heroine': "Stop, why play if she's not around. "
 }
 
 collision_message = {
@@ -43,5 +46,6 @@ collision_message = {
     'Food': "Delicious!",
     'StairsUp': "Available only in full version.",
     'StairsDown': "Available only in full version.",
-    'Hero': "You need a clone for that."
+    'Hero': "Hello there.",
+    'Heroine': "Hi there."
 }
