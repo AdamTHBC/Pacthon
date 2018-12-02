@@ -22,6 +22,7 @@ class Actor(Interactive):
         self.damage = 1
         self.damage_factor = 1
         self.inventory = Inventory()
+        self.steps = 0
 
     def attack_result(self, damage):
         """

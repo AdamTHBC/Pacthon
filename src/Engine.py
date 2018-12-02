@@ -62,15 +62,30 @@ class Engine:
 
     def show_stats(self):
         hero = self.map.objects.singulars.get('Hero')
-        self.sttscr.addstr(1, max_x + 5, "LV " + str(hero.level))
-        self.sttscr.addstr(2, max_x + 5, "HP " + str(hero.hp))
-        self.sttscr.addstr(3, max_x + 5, "XP " + str(hero.xp))
-        self.sttscr.addstr(4, max_x + 5, "G " + str(hero.gold))
+        if hero is not None:
+            self.sttscr.addstr(1, max_x + 5, "LV " + str(hero.level))
+            self.sttscr.addstr(2, max_x + 5, "HP " + str(hero.hp))
+            self.sttscr.addstr(3, max_x + 5, "XP " + str(hero.xp))
+            self.sttscr.addstr(4, max_x + 5, "G " + str(hero.gold))
+        else:
+            self.sttscr.addstr(0, max_x + 5, " ___")
+            self.sttscr.addstr(1, max_x + 5, "/   \\")
+            self.sttscr.addstr(2, max_x + 5, "|o o|")
+            self.sttscr.addstr(3, max_x + 5, "\\ \" /")
+            self.sttscr.addstr(4, max_x + 5, " |m|")
+
         heroine = self.map.objects.singulars.get('Heroine')
-        self.sttscr.addstr(1, max_x + 15, "LV " + str(heroine.level))
-        self.sttscr.addstr(2, max_x + 15, "HP " + str(heroine.hp))
-        self.sttscr.addstr(3, max_x + 15, "XP " + str(heroine.xp))
-        self.sttscr.addstr(4, max_x + 15, "G " + str(heroine.gold))
+        if heroine is not None:
+            self.sttscr.addstr(1, max_x + 15, "LV " + str(heroine.level))
+            self.sttscr.addstr(2, max_x + 15, "HP " + str(heroine.hp))
+            self.sttscr.addstr(3, max_x + 15, "XP " + str(heroine.xp))
+            self.sttscr.addstr(4, max_x + 15, "G " + str(heroine.gold))
+        else:
+            self.sttscr.addstr(0, max_x + 15, " ___")
+            self.sttscr.addstr(1, max_x + 15, "/   \\")
+            self.sttscr.addstr(2, max_x + 15, "|o o|")
+            self.sttscr.addstr(3, max_x + 15, "\\ \" /")
+            self.sttscr.addstr(4, max_x + 15, " |m|")
 
     def show_message(self, actor, message):
         if (actor.type_name in ['Hero', 'Heroine']):
@@ -276,7 +291,6 @@ class Engine:
     def action_move(self, actor, key):
         """result of moving but only if arrow button was pressed"""
         if (key in move_keys):
-            actor.steps += 1
             actor.apply_result(self.move(actor, key))
 
     def action_inventory(self, actor, key):
@@ -320,13 +334,28 @@ class Engine:
         hero = self.map.objects.singulars.get('Hero')
         heroine = self.map.objects.singulars.get('Heroine')
         objects_left = self.map.objects.count()
-        if (key == 'q' or hero.hp <= 0 or heroine.hp <= 0 or objects_left == 0):
+        if hero is not None and hero.hp <= 0:
+            self.map.objects.remove_object(hero)
+        if heroine is not None and heroine.hp <= 0:
+            self.map.objects.remove_object(heroine)
+        if hero is None and heroine is None:
             self.all_erase()
-            self.map.stdscr.addstr(0, 0, "final score: "
-                                   + str(5 * hero.xp + 4 * hero.gold + 10 * hero.hp - hero.steps
-                                         + 5 * heroine.xp + 4 * heroine.gold + 10 * heroine.hp - heroine.steps
-                                         )
-                                   + "\n\rTHE END")
+            self.show_stats()
+            self.map.stdscr.addstr(0, 0, "Try again!")
+            self.map.stdscr.addstr(1, 1, "THE END")
+            return False
+
+        # or hero.hp <= 0 or heroine.hp <= 0
+        if (key == 'q' or objects_left == 0):
+            self.all_erase()
+            score = 0
+            if hero is not None:
+                score += 5 * hero.xp + 4 * hero.gold + 10 * hero.hp - hero.steps
+            if heroine is not None:
+                score += 5 * heroine.xp + 4 * heroine.gold + 10 * heroine.hp - heroine.steps
+            self.show_stats()
+            self.map.stdscr.addstr(0, 0, "final score: " + str(score))
+            self.map.stdscr.addstr(1, 1, "THE END")
             return False
         return True
 
@@ -336,12 +365,17 @@ class Engine:
         afterwards program is ready for another input.
         TODO Actor hard-coded to be hero, it shoulds change in the future, selcted by different option."""
 
-        if key == '1':
+        if key == '1' and self.map.objects.singulars.get('Hero') is not None:
             self.current_actor = self.map.objects.singulars.get('Hero')
             return True
-        if key == '2':
+        if key == '2' and self.map.objects.singulars.get('Heroine') is not None:
             self.current_actor = self.map.objects.singulars.get('Heroine')
             return True
+        if self.map.objects.singulars.get('Hero') is None:
+            self.current_actor = self.map.objects.singulars.get('Heroine')
+
+        if self.map.objects.singulars.get('Heroine') is None:
+            self.current_actor = self.map.objects.singulars.get('Hero')
 
         if not isinstance(self.current_actor, Actor):
             raise Exception('command given to a non-actor class!')
@@ -356,6 +390,17 @@ class Engine:
         self.action_move(self.current_actor, ord(key))
         self.action_inventory(self.current_actor, key)
         self.action_saveload(self.current_actor, key)
+
+        # Monster action
+        if len(self.map.objects.lists.get('Monster')):
+            monster_direction = random.choice(move_keys)
+            monster_attack = random.choice(attack_keys)
+            current_monster = random.choice(self.map.objects.lists.get('Monster'))
+
+            self.action_move(current_monster, monster_direction)
+            self.action_attack(current_monster, monster_attack)
+
+        self.current_actor.steps += 1
         self.draw()
 
         # Depending on result - continue, game over OR (TBD) next level
