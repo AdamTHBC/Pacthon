@@ -87,8 +87,8 @@ class Engine:
             self.sttscr.addstr(3, max_x + 15, "\\ \" /")
             self.sttscr.addstr(4, max_x + 15, " |m|")
 
-    def show_message(self, actor, message):
-        if (actor.type_name in ['Hero', 'Heroine']):
+    def show_message(self, message):
+        if (self.current_actor.type_name in ['Hero', 'Heroine']):
             self.msgscr.addstr(max_y + 2, 0, message)
 
     def show_error(self, message):
@@ -143,29 +143,28 @@ class Engine:
         "create object otherwise"
         self.map.objects.create_object(object_type, new_x, new_y)
 
-    def pick_up(self, actor):
+    def pick_up(self):
         """
         pick up an object lying by actor's feet
         :return: 0 - ok. 1 - not item. 2 - inventory full.
         """
-        target = self.map.objects.get_object(actor.x, actor.y, actor.type_name)
+        target = self.map.objects.get_object(self.current_actor.x, self.current_actor.y, self.current_actor.type_name)
 
         if not isinstance(target, MapItem):
             return 1
 
         # Try adding to inventory
-        result = actor.inventory.inventory_add(InventoryItem(target.ItemID))
+        result = self.current_actor.inventory.inventory_add(InventoryItem(target.ItemID))
         if (result == 0):
             # Item added
             self.map.objects.remove_object(target)
 
         return result
 
-
-    def move(self, actor, key):
+    def move(self, key):
         """move an actor in specified direction, return collision result or 0"""
-        tmp_x = actor.x
-        tmp_y = actor.y
+        tmp_x = self.current_actor.x
+        tmp_y = self.current_actor.y
 
         if (key == 65):  # UP
             tmp_y -= 1
@@ -179,34 +178,34 @@ class Engine:
 
         "case 1: border"
         if (tmp_x == 0 or tmp_x > max_x or tmp_y == 0 or tmp_y > max_y):
-            self.show_message(actor, "World's end")
+            self.show_message("World's end")
             return 0
 
         "case 2: empty field"
         if (target is None):
-            actor.x = tmp_x
-            actor.y = tmp_y
+            self.current_actor.x = tmp_x
+            self.current_actor.y = tmp_y
             return 0
 
         "case 3: collision - interaction"
         result = target.collision_result()
         target.hp -= result.damage_to_self
         if (not target.obstacle):
-            actor.x = tmp_x
-            actor.y = tmp_y
+            self.current_actor.x = tmp_x
+            self.current_actor.y = tmp_y
 
         if (target.hp <= 0):
             self.map.objects.remove_object(target)
 
         message = collision_message.get(target.type_name)
-        self.show_message(actor, message)
+        self.show_message(message)
 
         return result
 
-    def look_at(self, actor, key):
+    def look_at(self, key):
         """check object near hero, get some information"""
-        look_x = actor.x
-        look_y = actor.y
+        look_x = self.current_actor.x
+        look_y = self.current_actor.y
         if (key == 'w'):  # UP
             look_y -= 1
         if (key == 's'):  # DOWN
@@ -219,11 +218,11 @@ class Engine:
         if (target is None):
             return 0
         message = look_message.get(target.type_name)
-        self.show_message(actor, message)
+        self.show_message(message)
 
-    def attack(self, actor, key):
-        attack_x = actor.x
-        attack_y = actor.y
+    def attack(self, key):
+        attack_x = self.current_actor.x
+        attack_y = self.current_actor.y
         if (key == 'i'):  # UP
             attack_y -= 1
         if (key == 'k'):  # DOWN
@@ -237,26 +236,26 @@ class Engine:
         if (target is None):
             return 0
 
-        result = target.attack_result(actor.damage * actor.damage_factor)
+        result = target.attack_result(self.current_actor.damage * self.current_actor.damage_factor)
         target.hp -= result.damage_to_self
 
         if (target.hp <= 0):
             message = defeat_message.get(target.type_name)
-            self.show_message(actor, message)
+            self.show_message(message)
             self.map.objects.remove_object(target)
             return result
         else:
             message = attack_message.get(target.type_name)
-            battle_log = str(actor.type_name) + " attacked for " + str(actor.damage) + \
+            battle_log = str(self.current_actor.type_name) + " attacked for " + str(self.current_actor.damage) + \
                          " and " + str(target.type_name) + " has " + str(target.hp) + " hp remaining."
-            self.show_message(actor, message + battle_log)
+            self.show_message(message + battle_log)
 
             return 0
 
     ########################### control ############################
 
     def game_start(self):
-        show_animation(self.map.stdscr)
+        #        show_animation(self.map.stdscr)
         self.show_help()
         """clean unused keys"""
         while (self.map.stdscr.getch() in ignore_keys):
@@ -273,33 +272,33 @@ class Engine:
             self.spawn('Map item')
             return
 
-    def action_pick_up(self, actor, key):
+    def action_pick_up(self, key):
         """result of looking at objects but only if attack button was pressed"""
         if (key == ' '):
-            self.pick_up(actor)
+            self.pick_up()
 
-    def action_look(self, actor, key):
+    def action_look(self, key):
         """result of looking at objects but only if attack button was pressed"""
         if (key in look_keys):
-            self.look_at(actor, key)
+            self.look_at(key)
 
-    def action_attack(self, actor, key):
+    def action_attack(self, key):
         """result of attack but only if attack button was pressed"""
         if (key in attack_keys):
-            actor.apply_result(self.attack(actor, key))
+            self.current_actor.apply_result(self.attack(key))
 
-    def action_move(self, actor, key):
+    def action_move(self, key):
         """result of moving but only if arrow button was pressed"""
         if (key in move_keys):
-            actor.apply_result(self.move(actor, key))
+            self.current_actor.apply_result(self.move(key))
 
-    def action_inventory(self, actor, key):
+    def action_inventory(self, key):
         if (key == 'I'):
             self.all_erase()
-            actor.inventory.view(self.invscr, actor)
+            self.current_actor.inventory.view(self.invscr, self.current_actor)
             self.draw()
 
-    def action_saveload(self, actor, key):
+    def action_saveload(self, key):
         if (key == 'S'):
             prompt = "Save Game menu. Give savefile name."
             savename = self.prompt_input(prompt)
@@ -311,9 +310,9 @@ class Engine:
             if (result == 1):
                 # Check if exists, ask to confirm overwrite
                 message = "Game saved!"
-                self.show_message(actor, message)
+                self.show_message(message)
             if (result == 2):
-                self.action_saveload(actor, key)
+                self.action_saveload(key)
 
         if (key == 'L'):
             prompt = "Load Game menu. Give savefile name."
@@ -326,9 +325,9 @@ class Engine:
             if (result == 1):
                 # sprawdz czy taki plik istnieje a jak nie to error
                 message = "Game Loaded!"
-                self.show_message(actor, message)
+                self.show_message(message)
             if (result == 2):
-                self.action_saveload(actor, key)
+                self.action_saveload(key)
 
     def check_quit(self, key):
         hero = self.map.objects.singulars.get('Hero')
@@ -338,11 +337,12 @@ class Engine:
             self.map.objects.remove_object(hero)
         if heroine is not None and heroine.hp <= 0:
             self.map.objects.remove_object(heroine)
-        if hero is None and heroine is None:
+        if self.map.objects.singulars.get('Hero') is None and self.map.objects.singulars.get('Heroine') is None:
             self.all_erase()
             self.show_stats()
             self.map.stdscr.addstr(0, 0, "Try again!")
             self.map.stdscr.addstr(1, 1, "THE END")
+            self.all_refresh()
             return False
 
         # or hero.hp <= 0 or heroine.hp <= 0
@@ -363,7 +363,7 @@ class Engine:
         """main function in the game
         given input is put to all main actions and results are redrawn,
         afterwards program is ready for another input.
-        TODO Actor hard-coded to be hero, it shoulds change in the future, selcted by different option."""
+        """
 
         if key == '1' and self.map.objects.singulars.get('Hero') is not None:
             self.current_actor = self.map.objects.singulars.get('Hero')
@@ -373,7 +373,6 @@ class Engine:
             return True
         if self.map.objects.singulars.get('Hero') is None:
             self.current_actor = self.map.objects.singulars.get('Heroine')
-
         if self.map.objects.singulars.get('Heroine') is None:
             self.current_actor = self.map.objects.singulars.get('Hero')
 
@@ -384,24 +383,26 @@ class Engine:
             return True
         self.all_erase()
         self.action_spawn(key)
-        self.action_pick_up(self.current_actor, key)
-        self.action_look(self.current_actor, key)
-        self.action_attack(self.current_actor, key)
-        self.action_move(self.current_actor, ord(key))
-        self.action_inventory(self.current_actor, key)
-        self.action_saveload(self.current_actor, key)
+        self.action_pick_up(key)
+        self.action_look(key)
+        self.action_attack(key)
+        self.action_move(ord(key))
+        self.action_inventory(key)
+        self.action_saveload(key)
 
         # Monster action
         if len(self.map.objects.lists.get('Monster')):
             monster_direction = random.choice(move_keys)
             monster_attack = random.choice(attack_keys)
-            current_monster = random.choice(self.map.objects.lists.get('Monster'))
+            tmp_actor = self.current_actor
+            self.current_actor = random.choice(self.map.objects.lists.get('Monster'))
 
-            self.action_move(current_monster, monster_direction)
-            self.action_attack(current_monster, monster_attack)
+            self.action_move(monster_direction)
+            self.action_attack(monster_attack)
+            self.current_actor = tmp_actor
 
-        self.current_actor.steps += 1
         self.draw()
+        self.current_actor.steps += 1
 
-        # Depending on result - continue, game over OR (TBD) next level
+        # Depending on result - continue, game over OR (TODO) next level
         return self.check_quit(key)
