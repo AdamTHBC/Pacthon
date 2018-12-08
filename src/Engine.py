@@ -4,7 +4,6 @@ from unicurses import *
 
 from src.Inventory_Item import InventoryItem
 from src.Map import Map
-from src.map_objects.Actor import Actor
 from src.map_objects.Map_Item import MapItem
 from src.res import *
 
@@ -28,7 +27,7 @@ class Engine:
             self.spawn('Food')
         for x in range(amountItem):
             self.spawn('Map item')
-        self.current_actor = self.map.objects.singulars.get('Hero')
+        self.current_actor = self.map.objects.lists.get('Hero')[0]
 
 
     def __del__(self):
@@ -61,34 +60,23 @@ class Engine:
         self.all_refresh()
 
     def show_stats(self):
-        hero = self.map.objects.singulars.get('Hero')
-        if hero is not None:
-            self.sttscr.addstr(1, max_x + 5, "LV " + str(hero.level))
-            self.sttscr.addstr(2, max_x + 5, "HP " + str(hero.hp))
-            self.sttscr.addstr(3, max_x + 5, "XP " + str(hero.xp))
-            self.sttscr.addstr(4, max_x + 5, "G " + str(hero.gold))
-        else:
-            self.sttscr.addstr(0, max_x + 5, " ___")
-            self.sttscr.addstr(1, max_x + 5, "/   \\")
-            self.sttscr.addstr(2, max_x + 5, "|o o|")
-            self.sttscr.addstr(3, max_x + 5, "\\ \" /")
-            self.sttscr.addstr(4, max_x + 5, " |m|")
-
-        heroine = self.map.objects.singulars.get('Heroine')
-        if heroine is not None:
-            self.sttscr.addstr(1, max_x + 15, "LV " + str(heroine.level))
-            self.sttscr.addstr(2, max_x + 15, "HP " + str(heroine.hp))
-            self.sttscr.addstr(3, max_x + 15, "XP " + str(heroine.xp))
-            self.sttscr.addstr(4, max_x + 15, "G " + str(heroine.gold))
-        else:
-            self.sttscr.addstr(0, max_x + 15, " ___")
-            self.sttscr.addstr(1, max_x + 15, "/   \\")
-            self.sttscr.addstr(2, max_x + 15, "|o o|")
-            self.sttscr.addstr(3, max_x + 15, "\\ \" /")
-            self.sttscr.addstr(4, max_x + 15, " |m|")
+        for hero_id in range(0, len(self.map.objects.lists.get('Hero'))):
+            hero = self.map.objects.lists.get('Hero')[hero_id]
+            if hero.status != 'dead':
+                self.sttscr.addstr(0, max_x + 5 + 10 * hero_id, str(hero.name))
+                self.sttscr.addstr(1, max_x + 5 + 10 * hero_id, "LV " + str(hero.level))
+                self.sttscr.addstr(2, max_x + 5 + 10 * hero_id, "HP " + str(hero.hp))
+                self.sttscr.addstr(3, max_x + 5 + 10 * hero_id, "XP " + str(hero.xp))
+                self.sttscr.addstr(4, max_x + 5 + 10 * hero_id, "G " + str(hero.gold))
+            else:
+                self.sttscr.addstr(0, max_x + 5 + 10 * hero_id, " ___")
+                self.sttscr.addstr(1, max_x + 5 + 10 * hero_id, "/   \\")
+                self.sttscr.addstr(2, max_x + 5 + 10 * hero_id, "|o o|")
+                self.sttscr.addstr(3, max_x + 5 + 10 * hero_id, "\\ \" /")
+                self.sttscr.addstr(4, max_x + 5 + 10 * hero_id, " |m|")
 
     def show_message(self, message):
-        if (self.current_actor.type_name in ['Hero', 'Heroine']):
+        if self.current_actor.type_name == 'Hero':
             self.msgscr.addstr(max_y + 2, 0, message)
 
     def show_error(self, message):
@@ -125,22 +113,22 @@ class Engine:
     def spawn(self, object_type):
         """Generator of new objects of any available type"""
 
-        "verify if object limit not reached"
+        # verify if object limit not reached
         if (self.map.objects.check_limit()):
             self.show_error("Can't create more objects!")
             return
 
-        "roll new coords"
+        # roll new coords
         new_x = random.randint(1, max_x)
         new_y = random.randint(1, max_y)
 
-        "verify if coords are valid (no object there)"
-        "repeat spawn if cords were bad"
+        # verify if coords are valid (no object there)
+        # repeat spawn if cords were bad
         if (self.map.objects.check_coords(new_x, new_y)):
             self.spawn(object_type)
             return
 
-        "create object otherwise"
+        # create object otherwise
         self.map.objects.create_object(object_type, new_x, new_y)
 
     def pick_up(self):
@@ -176,18 +164,18 @@ class Engine:
             tmp_x -= 1
         target = self.map.objects.get_object(tmp_x, tmp_y)
 
-        "case 1: border"
+        # case 1: border
         if (tmp_x == 0 or tmp_x > max_x or tmp_y == 0 or tmp_y > max_y):
             self.show_message("World's end")
             return 0
 
-        "case 2: empty field"
+        # case 2: empty field
         if (target is None):
             self.current_actor.x = tmp_x
             self.current_actor.y = tmp_y
             return 0
 
-        "case 3: collision - interaction"
+        # case 3: collision - interaction
         result = target.collision_result()
         target.hp -= result.damage_to_self
         if (not target.obstacle):
@@ -255,9 +243,9 @@ class Engine:
     ########################### control ############################
 
     def game_start(self):
-        #        show_animation(self.map.stdscr)
+        # show_animation(self.map.stdscr)
         self.show_help()
-        """clean unused keys"""
+        # Clean unused keys
         while (self.map.stdscr.getch() in ignore_keys):
             self.map.stdscr.getch()
         self.all_erase()
@@ -299,6 +287,11 @@ class Engine:
             self.draw()
 
     def action_saveload(self, key):
+        """
+        TODO, nothing is completed here
+        :param key: pressed key
+        :return: nothing yer
+        """
         if (key == 'S'):
             prompt = "Save Game menu. Give savefile name."
             savename = self.prompt_input(prompt)
@@ -323,21 +316,22 @@ class Engine:
                 # Return to map
                 "?"
             if (result == 1):
-                # sprawdz czy taki plik istnieje a jak nie to error
+                # Check if file exists, raise error otherwise
                 message = "Game Loaded!"
                 self.show_message(message)
             if (result == 2):
                 self.action_saveload(key)
 
     def check_quit(self, key):
-        hero = self.map.objects.singulars.get('Hero')
-        heroine = self.map.objects.singulars.get('Heroine')
-        objects_left = self.map.objects.count()
-        if hero is not None and hero.hp <= 0:
-            self.map.objects.remove_object(hero)
-        if heroine is not None and heroine.hp <= 0:
-            self.map.objects.remove_object(heroine)
-        if self.map.objects.singulars.get('Hero') is None and self.map.objects.singulars.get('Heroine') is None:
+        score = 0
+        for hero_id in range(0, len(self.map.objects.lists.get('Hero'))):
+            hero = self.map.objects.lists.get('Hero')[hero_id]
+            if hero.hp <= 0:
+                self.map.objects.remove_object(hero)
+            if hero.status != 'dead':
+                score += 5 * hero.xp + 4 * hero.gold + 10 * hero.hp - hero.steps
+
+        if score == 0:
             self.all_erase()
             self.show_stats()
             self.map.stdscr.addstr(0, 0, "Try again!")
@@ -345,14 +339,9 @@ class Engine:
             self.all_refresh()
             return False
 
-        # or hero.hp <= 0 or heroine.hp <= 0
+        objects_left = self.map.objects.count()
         if (key == 'q' or objects_left == 0):
             self.all_erase()
-            score = 0
-            if hero is not None:
-                score += 5 * hero.xp + 4 * hero.gold + 10 * hero.hp - hero.steps
-            if heroine is not None:
-                score += 5 * heroine.xp + 4 * heroine.gold + 10 * heroine.hp - heroine.steps
             self.show_stats()
             self.map.stdscr.addstr(0, 0, "final score: " + str(score))
             self.map.stdscr.addstr(1, 1, "THE END")
@@ -365,22 +354,26 @@ class Engine:
         afterwards program is ready for another input.
         """
 
-        if key == '1' and self.map.objects.singulars.get('Hero') is not None:
-            self.current_actor = self.map.objects.singulars.get('Hero')
-            return True
-        if key == '2' and self.map.objects.singulars.get('Heroine') is not None:
-            self.current_actor = self.map.objects.singulars.get('Heroine')
-            return True
-        if self.map.objects.singulars.get('Hero') is None:
-            self.current_actor = self.map.objects.singulars.get('Heroine')
-        if self.map.objects.singulars.get('Heroine') is None:
-            self.current_actor = self.map.objects.singulars.get('Hero')
-
-        if not isinstance(self.current_actor, Actor):
-            raise Exception('command given to a non-actor class!')
-
         if (ord(key) in ignore_keys):
             return True
+
+        # force hero switch if current is dead
+        if self.current_actor.status == 'dead':
+            for hero_id in range(0, len(self.map.objects.lists.get('Hero'))):
+                selected_hero = self.map.objects.lists.get('Hero')[hero_id]
+                if selected_hero.status != 'dead':
+                    self.current_actor = selected_hero
+        if self.current_actor.status == 'dead':
+            return False
+
+        # user-requested hero switch (only to living one)
+        if key in "123456789" and int(key) in range(0, len(self.map.objects.lists.get('Hero')) + 1):
+            selected_hero = self.map.objects.lists.get('Hero')[int(key) - 1]
+            if selected_hero.status != 'dead':
+                self.current_actor = selected_hero
+            return True
+
+        # check key in every action
         self.all_erase()
         self.action_spawn(key)
         self.action_pick_up(key)
@@ -391,6 +384,7 @@ class Engine:
         self.action_saveload(key)
 
         # Monster action
+        # more monsters will move on higher levels
         if len(self.map.objects.lists.get('Monster')):
             monster_direction = random.choice(move_keys)
             monster_attack = random.choice(attack_keys)

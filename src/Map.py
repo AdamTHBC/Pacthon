@@ -9,13 +9,17 @@ class Map:
     def draw_spot(self, x, y):
         """Decide what should be drawn on a given spot"""
 
-        # Verify singular objects
-        for i in self.objects.singulars.keys():
-            j = self.objects.singulars.get(i)
+        # Priority management - heroes first.
+        for j in self.objects.lists.get('Hero'):
             if (x == j.x and y == j.y):
                 return j.mark
 
-        # Verify lists
+        # Then, the enemies.
+        for j in self.objects.lists.get('Monster'):
+            if (x == j.x and y == j.y):
+                return j.mark
+
+        # Then, everything else..
         for i in self.objects.lists.keys():
             for j in self.objects.lists.get(i):
                 if (x == j.x and y == j.y):

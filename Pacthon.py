@@ -12,8 +12,8 @@ engine.game_start()
 
 key = stdscr.getkey()
 while engine.action(key):
-    """game is running"""
+    "game is running"
     key = stdscr.getkey()
 
-"""pres any button to quit"""
+"pres any button to quit"
 stdscr.getch()
