@@ -4,12 +4,13 @@ import random
 import yaml
 
 from src.map_objects import *
-from src.res.Important import max_x, max_y
+from src.res.Important import max_x, max_y, enemy_keys
 
 
 class Objects:
     def __init__(self):
-        self.lists = {'Monster': [], 'Gold': [], 'Wall': [], 'Food': [], 'Map item': [],
+        self.lists = {'Monster': [], 'Orc': [], 'Troll': [],
+                      'Gold': [], 'Wall': [], 'Food': [], 'Map item': [],
                       'StairsUp': [], 'StairsDown': [],
                       'Hero': []
                       }
@@ -98,6 +99,13 @@ class Objects:
     def count(self):
         result = 0
         for i in self.lists.keys():
+            for j in self.lists.get(i):
+                result += 1
+        return result
+
+    def count_enemies(self):
+        result = 0
+        for i in enemy_keys:
             for j in self.lists.get(i):
                 result += 1
         return result

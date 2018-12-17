@@ -15,6 +15,8 @@ amountMonster = 10
 amountWall = 10
 amountFood = 5
 
+enemy_keys = ['Monster', 'Orc', 'Troll']
+
 # not used yet
 object_amount = {
     'Item': 10,

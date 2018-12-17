@@ -78,6 +78,31 @@ class Engine:
                 self.sttscr.addstr(3, max_x + 5 + 10 * hero_id, "\\ \" /")
                 self.sttscr.addstr(4, max_x + 5 + 10 * hero_id, " |m|")
 
+    def show_level_up(self):
+        if self.current_actor.type_name == 'Hero':
+            self.all_erase()
+            self.msgscr.addstr(2, 2, "    _     _")
+            self.msgscr.addstr(3, 2, "|  |_\\  /|_ |")
+            self.msgscr.addstr(4, 2, "|_ |_ \\/ |_ |_")
+            self.msgscr.addstr(5, 6, "     _")
+            self.msgscr.addstr(6, 6, "| | |_) |")
+            self.msgscr.addstr(7, 6, ":_: |   o")
+            self.msgscr.addstr(10, 2, "attack up!")
+            self.msgscr.addstr(11, 2, "defense up!")
+            self.msgscr.addstr(12, 2, "max hp up!")
+            self.msgscr.addstr(15, 2, "Press any key to return")
+            self.all_refresh()
+            self.msgscr.getkey()
+
+    def show_stage_clear(self):
+        if self.current_actor.type_name == 'Hero':
+            self.all_erase()
+            self.msgscr.addstr(2, 2, "Congratulations, you have cleared the stage.")
+            self.msgscr.addstr(3, 2, "But your quest is not over.")
+            self.msgscr.addstr(15, 2, "Press any key to continue to the next stage.")
+            self.all_refresh()
+            self.msgscr.getkey()
+
     def show_message(self, message):
         if self.current_actor.type_name == 'Hero':
             self.msgscr.addstr(max_y + 2, 0, message)
@@ -342,12 +367,16 @@ class Engine:
             self.all_refresh()
             return False
 
-        objects_left = self.map.objects.count()
-        if (key == 'q' or objects_left == 0):
+        enemies_left = self.map.objects.count_enemies()
+        if key == 'q':
             self.all_erase()
             self.show_stats()
             self.map.stdscr.addstr(0, 0, "final score: " + str(score))
             self.map.stdscr.addstr(1, 1, "THE END")
+            return False
+        # level clear and standing on the stairs
+        if enemies_left == 0 and self.current_actor.x == max_x and self.current_actor.y == max_y:
+            self.show_stage_clear()
             return False
         return True
 
@@ -374,6 +403,7 @@ class Engine:
             selected_hero = self.map.objects.lists.get('Hero')[int(key) - 1]
             if selected_hero.status != 'dead':
                 self.current_actor = selected_hero
+        bad_tmp = self.current_actor.level
 
         # check key in every action
         self.all_erase()
@@ -396,6 +426,10 @@ class Engine:
             self.action_move(monster_direction)
             self.action_attack(monster_attack)
             self.current_actor = tmp_actor
+
+        if self.current_actor.level > bad_tmp:
+            self.show_level_up()
+            self.all_erase()
 
         self.draw()
         self.current_actor.steps += 1

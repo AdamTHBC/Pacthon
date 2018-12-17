@@ -42,6 +42,6 @@ collision_message = {
     'Wall': "Bump!",
     'Food': "Delicious!",
     'StairsUp': "Available only in full version.",
-    'StairsDown': "Available only in full version.",
+    'StairsDown': "Defeat all monster first!.",
     'Hero': "Hello there."
 }
