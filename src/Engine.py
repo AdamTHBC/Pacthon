@@ -63,7 +63,10 @@ class Engine:
         for hero_id in range(0, len(self.map.objects.lists.get('Hero'))):
             hero = self.map.objects.lists.get('Hero')[hero_id]
             if hero.status != 'dead':
-                self.sttscr.addstr(0, max_x + 5 + 10 * hero_id, str(hero.name))
+                if hero == self.current_actor:
+                    self.sttscr.addstr(0, max_x + 5 + 10 * hero_id, "=" + str(hero.name) + "=")
+                else:
+                    self.sttscr.addstr(0, max_x + 5 + 10 * hero_id, " " + str(hero.name))
                 self.sttscr.addstr(1, max_x + 5 + 10 * hero_id, "LV " + str(hero.level))
                 self.sttscr.addstr(2, max_x + 5 + 10 * hero_id, "HP " + str(hero.hp))
                 self.sttscr.addstr(3, max_x + 5 + 10 * hero_id, "XP " + str(hero.xp))
@@ -99,7 +102,7 @@ class Engine:
 
     def show_help(self):
         self.map.stdscr.addstr(0, 0, """
-        1, 2 - select actor
+        1-9 - select actor
         arrows - move
         """ + look_keys + """ - look
         """ + attack_keys + """  - attack
@@ -371,7 +374,6 @@ class Engine:
             selected_hero = self.map.objects.lists.get('Hero')[int(key) - 1]
             if selected_hero.status != 'dead':
                 self.current_actor = selected_hero
-            return True
 
         # check key in every action
         self.all_erase()
