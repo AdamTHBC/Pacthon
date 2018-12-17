@@ -20,7 +20,8 @@ class Engine:
         for x in range(amountGold):
             self.spawn('Gold')
         for x in range(amountMonster):
-            self.spawn('Monster')
+            monster = random.choice(enemy_keys)
+            self.spawn(monster)
         for x in range(amountWall):
             self.spawn('Wall')
         for x in range(amountFood):
@@ -81,18 +82,18 @@ class Engine:
     def show_level_up(self):
         if self.current_actor.type_name == 'Hero':
             self.all_erase()
-            self.msgscr.addstr(2, 2, "    _     _")
-            self.msgscr.addstr(3, 2, "|  |_\\  /|_ |")
-            self.msgscr.addstr(4, 2, "|_ |_ \\/ |_ |_")
-            self.msgscr.addstr(5, 6, "     _")
-            self.msgscr.addstr(6, 6, "| | |_) |")
-            self.msgscr.addstr(7, 6, ":_: |   o")
-            self.msgscr.addstr(10, 2, "attack up!")
-            self.msgscr.addstr(11, 2, "defense up!")
-            self.msgscr.addstr(12, 2, "max hp up!")
-            self.msgscr.addstr(15, 2, "Press any key to return")
+            self.map.stdscr.addstr(2, 2, "    _     _")
+            self.map.stdscr.addstr(3, 2, "|  |_\\  /|_ |")
+            self.map.stdscr.addstr(4, 2, "|_ |_ \\/ |_ |_")
+            self.map.stdscr.addstr(5, 6, "     _")
+            self.map.stdscr.addstr(6, 6, "| | |_) |")
+            self.map.stdscr.addstr(7, 6, ":_: |   o")
+            self.map.stdscr.addstr(10, 2, "attack up!")
+            self.map.stdscr.addstr(11, 2, "defense up!")
+            self.map.stdscr.addstr(12, 2, "max hp up!")
+            self.map.stdscr.addstr(15, 2, "Press any key to return")
             self.all_refresh()
-            self.msgscr.getkey()
+            self.map.stdscr.getkey()
 
     def show_stage_clear(self):
         if self.current_actor.type_name == 'Hero':
@@ -177,97 +178,6 @@ class Engine:
 
         return result
 
-    def move(self, key):
-        """move an actor in specified direction, return collision result or 0"""
-        tmp_x = self.current_actor.x
-        tmp_y = self.current_actor.y
-
-        if (key == 65):  # UP
-            tmp_y -= 1
-        if (key == 66):  # DOWN
-            tmp_y += 1
-        if (key == 67):  # RIGHT
-            tmp_x += 1
-        if (key == 68):  # LEFT
-            tmp_x -= 1
-        target = self.map.objects.get_object(tmp_x, tmp_y)
-
-        # case 1: border
-        if (tmp_x == 0 or tmp_x > max_x or tmp_y == 0 or tmp_y > max_y):
-            self.show_message("World's end")
-            return 0
-
-        # case 2: empty field
-        if (target is None):
-            self.current_actor.x = tmp_x
-            self.current_actor.y = tmp_y
-            return 0
-
-        # case 3: collision - interaction
-        result = target.collision_result()
-        target.hp -= result.damage_to_self
-        if (not target.obstacle):
-            self.current_actor.x = tmp_x
-            self.current_actor.y = tmp_y
-
-        if (target.hp <= 0):
-            self.map.objects.remove_object(target)
-
-        message = collision_message.get(target.type_name)
-        self.show_message(message)
-
-        return result
-
-    def look_at(self, key):
-        """check object near hero, get some information"""
-        look_x = self.current_actor.x
-        look_y = self.current_actor.y
-        if (key == 'w'):  # UP
-            look_y -= 1
-        if (key == 's'):  # DOWN
-            look_y += 1
-        if (key == 'a'):  # RIGHT
-            look_x -= 1
-        if (key == 'd'):  # LEFT
-            look_x += 1
-        target = self.map.objects.get_object(look_x, look_y)
-        if (target is None):
-            return 0
-        message = look_message.get(target.type_name)
-        self.show_message(message)
-
-    def attack(self, key):
-        attack_x = self.current_actor.x
-        attack_y = self.current_actor.y
-        if (key == 'i'):  # UP
-            attack_y -= 1
-        if (key == 'k'):  # DOWN
-            attack_y += 1
-        if (key == 'j'):  # RIGHT
-            attack_x -= 1
-        if (key == 'l'):  # LEFT
-            attack_x += 1
-        target = self.map.objects.get_object(attack_x, attack_y)
-
-        if (target is None):
-            return 0
-
-        result = target.attack_result(self.current_actor.damage * self.current_actor.damage_factor)
-        target.hp -= result.damage_to_self
-
-        if (target.hp <= 0):
-            message = defeat_message.get(target.type_name)
-            self.show_message(message)
-            self.map.objects.remove_object(target)
-            return result
-        else:
-            message = attack_message.get(target.type_name)
-            battle_log = str(self.current_actor.type_name) + " attacked for " + str(self.current_actor.damage) + \
-                         " and " + str(target.type_name) + " has " + str(target.hp) + " hp remaining."
-            self.show_message(message + battle_log)
-
-            return 0
-
     ########################### control ############################
 
     def game_start(self):
@@ -281,11 +191,13 @@ class Engine:
 
     def action_spawn(self, key):
         if (key == 'n' and debug):
-            self.spawn('Gold')
-            self.spawn('Monster')
-            self.spawn('Wall')
-            self.spawn('Food')
-            self.spawn('Map item')
+            self.show_error(self.map.objects.spawn('Gold'))
+            self.show_error(self.map.objects.spawn('Monster'))
+            self.show_error(self.map.objects.spawn('Orc'))
+            self.show_error(self.map.objects.spawn('Troll'))
+            self.show_error(self.map.objects.spawn('Wall'))
+            self.show_error(self.map.objects.spawn('Food'))
+            self.show_error(self.map.objects.spawn('Map item'))
             return
 
     def action_pick_up(self, key):
@@ -296,17 +208,17 @@ class Engine:
     def action_look(self, key):
         """result of looking at objects but only if attack button was pressed"""
         if (key in look_keys):
-            self.look_at(key)
+            self.show_message(self.map.objects.look_at(key, self.current_actor))
 
     def action_attack(self, key):
         """result of attack but only if attack button was pressed"""
         if (key in attack_keys):
-            self.current_actor.apply_result(self.attack(key))
+            self.show_message(self.map.objects.attack(key, self.current_actor))
 
     def action_move(self, key):
         """result of moving but only if arrow button was pressed"""
         if (key in move_keys):
-            self.current_actor.apply_result(self.move(key))
+            self.show_message(self.map.objects.move(key, self.current_actor))
 
     def action_inventory(self, key):
         if (key == 'I'):
@@ -421,7 +333,8 @@ class Engine:
             monster_direction = random.choice(move_keys)
             monster_attack = random.choice(attack_keys)
             tmp_actor = self.current_actor
-            self.current_actor = random.choice(self.map.objects.lists.get('Monster'))
+            enemy = random.choice(enemy_keys)
+            self.current_actor = random.choice(self.map.objects.lists.get(enemy))
 
             self.action_move(monster_direction)
             self.action_attack(monster_attack)
