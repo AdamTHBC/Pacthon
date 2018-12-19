@@ -5,7 +5,7 @@ import yaml
 
 from src.map_objects import *
 from src.res.Dictionary_Text import *
-from src.res.Important import max_x, max_y, enemy_keys
+from src.res.Important import max_x, max_y, enemy_keys, attack_keys, move_keys
 
 
 class Objects:
@@ -241,3 +241,24 @@ class Objects:
         if (target is None):
             return ""
         return look_message.get(target.type_name)
+
+    def enemy_action(self, difficulty=1):
+        # select enemies
+        # get number of enemies
+        enemy_count = self.count_enemies()
+        number_of_moving_enemies = min(enemy_count, difficulty)
+        if number_of_moving_enemies == 0:
+            return
+
+        # select different enemies
+        all_enemies = []
+        for i in enemy_keys:
+            for j in self.lists.get(i):
+                all_enemies.append(j)
+        moving_enemies = random.sample(all_enemies, number_of_moving_enemies)
+        for i in moving_enemies:
+            move_dir = random.choice(move_keys)
+            self.move(move_dir, i)
+            attack_dir = random.choice(attack_keys)
+            self.attack(attack_dir, i)
+        return

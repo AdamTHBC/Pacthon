@@ -332,17 +332,7 @@ class Engine:
         self.action_saveload(key)
 
         # Monster action
-        # more monsters will move on higher levels
-        if len(self.map.objects.lists.get('Monster')):
-            monster_direction = random.choice(move_keys)
-            monster_attack = random.choice(attack_keys)
-            tmp_actor = self.current_actor
-            enemy = random.choice(enemy_keys)
-            self.current_actor = random.choice(self.map.objects.lists.get(enemy))
-
-            self.action_move(monster_direction)
-            self.action_attack(monster_attack)
-            self.current_actor = tmp_actor
+        self.map.objects.enemy_action(1)
 
         if self.current_actor.level > bad_tmp:
             self.show_level_up()
