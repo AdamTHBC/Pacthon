@@ -223,7 +223,11 @@ class Engine:
     def action_inventory(self, key):
         if (key == 'I'):
             self.all_erase()
-            self.current_actor.inventory.view(self.invscr, self.current_actor)
+            dropped_items = self.current_actor.inventory.view(self.invscr, self.current_actor)
+            if dropped_items is not None:
+                for item in dropped_items:
+                    self.map.objects.lists.get('Map item').append(
+                        MapItem(item, self.current_actor.x, self.current_actor.y))
             self.draw()
 
     def action_saveload(self, key):

@@ -84,7 +84,7 @@ class Objects:
             self.lists.get(object_type).append(Wall(x, y))
         elif (object_type == 'Food'):
             self.lists.get(object_type).append(Food(x, y))
-        elif (object_type == 'Map item'):
+        elif object_type == 'Map item':
             new_id = self.item_keys[random.randint(0, len(self.item_keys) - 1)]
             self.lists.get(object_type).append(MapItem(new_id, x, y))
 

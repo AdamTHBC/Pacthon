@@ -27,6 +27,7 @@ class InventoryItem():
         self.effect_type = item_list.get(ItemID).get('effect_type')
         self.effect = item_list.get(ItemID).get('effect_params')
         self.slot = item_list.get(ItemID).get('slot')
+        self.item_id = ItemID
 
     def give_bonus(self, actor):
         if (self.effect.get('area') == 'gold'):

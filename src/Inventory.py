@@ -80,7 +80,7 @@ class Inventory():
         UP / DOWN - select
         u - use
         v - view
-        d - destroy
+        d - drop
         q - quit
         """)
 
@@ -99,8 +99,10 @@ class Inventory():
             self.ItemList[self.position].give_bonus(actor)
             self.ItemList.pop(self.position)
 
-    def destroy(self):
+    def drop(self):
+        dropped_id = self.ItemList[self.position].item_id
         self.ItemList.remove(self.ItemList[self.position])
+        return dropped_id
 
     def view_item(self, stream):
         self.ItemList[self.position].view(stream)
@@ -108,8 +110,9 @@ class Inventory():
 
     def action(self, key, stream, actor):
         stream.erase()
+        dropped_id = None
         if (ord(key) in ignore_keys):
-            return True
+            return dropped_id
         if (ord(key) in [65, 66]):
             self.move(ord(key))
         if (self.position < len(self.ItemList) and key == 'u'):
@@ -119,12 +122,10 @@ class Inventory():
         if (self.position < len(self.ItemList) and key == 'e'):
             self.equip(self.ItemList[self.position], actor)
         if (self.position < len(self.ItemList) and key == 'd'):
-            self.destroy()
+            dropped_id = self.drop()
         self.draw(stream)
 
-        if (key == 'q'):
-            return False
-        return True
+        return dropped_id
 
     def view(self, stream, actor):
         self.show_help(stream)
@@ -132,9 +133,14 @@ class Inventory():
         stream.erase()
         self.draw(stream)
         key = stream.getkey()
-        while self.action(key, stream, actor):
+        dropped_items = []
+        while key != 'q':
+            dropped_id = self.action(key, stream, actor)
+            if dropped_id is not None:
+                dropped_items.append(dropped_id)
             key = stream.getkey()
         stream.erase()
+        return dropped_items
 
     def draw(self, stream):
         for i in range(1, self.InventorySize + 1):
